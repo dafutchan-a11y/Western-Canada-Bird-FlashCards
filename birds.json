@@ -547,7 +547,9 @@
         "P"
       ],
       "dimorphic": false,
-      "starter": true
+      "starter": true,
+      "crop": "contain",
+      "position": "center center"
     },
     {
       "name": "Spotted Sandpiper",
@@ -1304,7 +1306,7 @@
       "dimorphic": false,
       "starter": false
     },
-   { "name": "Northern House Wren", "sci": "Troglodytes aedon", "wiki": "Northern house wren", "regions": ["P","I"], "dimorphic": false, "starter": false },
+    { "name": "Northern House Wren", "sci": "Troglodytes aedon", "wiki": "Northern house wren", "regions": ["P","I"], "dimorphic": false, "starter": false },
     {
       "name": "Pacific Wren",
       "sci": "Troglodytes pacificus",
