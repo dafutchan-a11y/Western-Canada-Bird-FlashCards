@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Birds of the Route — Calgary to Vancouver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5eedc;
+    --cream-warm: #efe4cc;
+    --paper: #fbf7ec;
+    --forest: #2d4a2b;
+    --forest-light: #4a6b48;
+    --moss: #7a8a5c;
+    --ochre: #c17f3b;
+    --ochre-light: #d9a365;
+    --rust: #a85a2b;
+    --ink: #2a241c;
+    --ink-soft: #5a4e3e;
+    --leaf: #e8ebdc;
+    --success: #5c7a3a;
+    --error: #a84b3a;
+    --shadow: 0 2px 8px rgba(42, 36, 28, 0.12), 0 8px 24px rgba(42, 36, 28, 0.08);
+    --shadow-lg: 0 4px 12px rgba(42, 36, 28, 0.16), 0 16px 40px rgba(42, 36, 28, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100%;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(193, 127, 59, 0.08), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(45, 74, 43, 0.08), transparent 50%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(42, 36, 28, 0.15);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    color: var(--forest);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .logo-mark {
+    font-size: 1em;
+    color: var(--ochre);
+    transform: translateY(-2px);
+  }
+
+  .tagline {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+  }
+
+  .route-stops {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--moss);
+    font-weight: 600;
+  }
+
+  .controls {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    border: 1px solid rgba(42, 36, 28, 0.08);
+  }
+
+  .control-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .control-row:last-child { margin-bottom: 0; }
+
+  .control-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .segmented {
+    display: flex;
+    flex: 1;
+    background: var(--leaf);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .segmented button {
+    flex: 1;
+    padding: 8px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .segmented button:hover {
+    color: var(--forest);
+  }
+
+  .segmented button.active {
+    background: var(--forest);
+    color: var(--paper);
+    box-shadow: 0 1px 3px rgba(42, 36, 28, 0.2);
+  }
+
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(42, 36, 28, 0.15);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+
+  .stats-item strong {
+    color: var(--forest);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .stats-item.streak strong {
+    color: var(--ochre);
+  }
+
+  /* ---- Card ---- */
+  .card-stage {
+    perspective: 1600px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: var(--paper);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(42, 36, 28, 0.1);
+    position: relative;
+    min-height: 360px;
+  }
+
+  .photo-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, var(--leaf), var(--cream-warm));
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+  }
+
+  .photo-wrap img.loading { opacity: 0; }
+
+  .photo-skeleton {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .photo-skeleton.hidden { opacity: 0; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .photo-empty {
+    text-align: center;
+    color: var(--ink-soft);
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    padding: 20px;
+  }
+
+  .photo-empty svg { width: 48px; height: 48px; opacity: 0.4; margin-bottom: 8px; }
+
+  .region-badges {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 60%;
+  }
+
+  .region-badge {
+    background: rgba(42, 36, 28, 0.72);
+    color: var(--cream);
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(4px);
+  }
+
+  .dimorphic-note {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: var(--ochre);
+    color: var(--paper);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .card-body {
+    padding: 20px 20px 22px;
+  }
+
+  /* Browse mode */
+  .reveal-prompt {
+    text-align: center;
+    padding: 20px 10px;
+    color: var(--ink-soft);
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 1rem;
+  }
+
+  .reveal-prompt .hint-key {
+    display: inline-block;
+    background: var(--leaf);
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-style: normal;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--forest);
+    margin: 0 2px;
+  }
+
+  .bird-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 5vw, 1.9rem);
+    color: var(--forest);
+    line-height: 1.15;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .bird-sci {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .bird-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+
+  .meta-chip {
+    background: var(--leaf);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--forest-light);
+  }
+
+  /* Quiz mode */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .choice-btn {
+    padding: 14px 12px;
+    background: var(--paper);
+    border: 2px solid var(--leaf);
+    border-radius: 12px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--forest);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 60px;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .choice-btn:hover:not(:disabled) {
+    border-color: var(--forest);
+    background: var(--leaf);
+    transform: translateY(-1px);
+  }
+
+  .choice-btn:disabled { cursor: default; }
+
+  .choice-btn.correct {
+    background: var(--success);
+    color: var(--paper);
+    border-color: var(--success);
+  }
+
+  .choice-btn.wrong {
+    background: rgba(168, 75, 58, 0.12);
+    color: var(--error);
+    border-color: var(--error);
+  }
+
+  .choice-btn.reveal-correct {
+    background: var(--success);
+    color: var(--paper);
+    border-color: var(--success);
+    animation: gentle-pulse 0.6s ease;
+  }
+
+  @keyframes gentle-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  .feedback {
+    margin-top: 14px;
+    text-align: center;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    min-height: 24px;
+    font-size: 1rem;
+    transition: opacity 0.3s;
+  }
+
+  .feedback.correct { color: var(--success); font-weight: 600; font-style: normal; }
+  .feedback.encouraging { color: var(--ochre); font-weight: 600; font-style: normal; }
+
+  /* ---- Action row ---- */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-primary {
+    background: var(--forest);
+    color: var(--paper);
+    box-shadow: 0 2px 6px rgba(42, 36, 28, 0.15);
+  }
+
+  .btn-primary:hover { background: var(--forest-light); transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: var(--paper);
+    color: var(--forest);
+    border: 2px solid var(--forest);
+  }
+
+  .btn-secondary:hover { background: var(--leaf); }
+
+  .btn:active { transform: translateY(0); }
+
+  footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  footer a { color: var(--forest); text-decoration: none; border-bottom: 1px dotted; }
+  footer a:hover { color: var(--ochre); }
+
+  .attribution {
+    margin-top: 4px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 0.75rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-soft);
+  }
+
+  .empty-state h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--forest);
+    margin-bottom: 8px;
+  }
+
+  /* small decorative feather corner */
+  .corner-feather {
+    position: absolute;
+    top: -18px;
+    right: -8px;
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+    transform: rotate(15deg);
+    pointer-events: none;
+  }
+
+  @media (max-width: 480px) {
+    .choices { grid-template-columns: 1fr; }
+    .control-row { flex-direction: column; gap: 10px; }
+    .corner-feather { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="logo">
+      <span class="logo-mark">✦</span>
+      <span>Birds of the Route</span>
+    </div>
+    <div class="tagline">A field-guide flashcard game for our Calgary&nbsp;→&nbsp;Vancouver trip</div>
+    <div class="route-stops">Calgary · Canmore · Golden · Revelstoke · Kamloops · Vancouver</div>
+  </header>
+
+  <section class="controls" aria-label="Game controls">
+    <div>
+      <span class="control-label">Mode</span>
+      <div class="control-row">
+        <div class="segmented" role="tablist" aria-label="Mode">
+          <button type="button" data-mode="browse" class="active" role="tab">Browse</button>
+          <button type="button" data-mode="quiz" role="tab">Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <span class="control-label">Region</span>
+      <div class="control-row">
+        <div class="segmented" role="tablist" aria-label="Region">
+          <button type="button" data-region="all" class="active">All</button>
+          <button type="button" data-region="P">Prairies</button>
+          <button type="button" data-region="M">Rockies</button>
+          <button type="button" data-region="I">Interior</button>
+          <button type="button" data-region="C">Coast</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <span class="control-label">Set</span>
+      <div class="control-row">
+        <div class="segmented" role="tablist" aria-label="Difficulty">
+          <button type="button" data-set="starter" class="active">Starter (~80 birds)</button>
+          <button type="button" data-set="all">Full (~160 birds)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stats-item"><strong id="poolCount">—</strong> in pool</div>
+      <div class="stats-item quiz-only" id="scoreWrap" hidden>Score: <strong id="score">0</strong> / <strong id="attempts">0</strong></div>
+      <div class="stats-item streak quiz-only" id="streakWrap" hidden>Streak: <strong id="streak">0</strong> 🔥</div>
+    </div>
+  </section>
+
+  <section class="card-stage">
+    <article class="card" id="card" aria-live="polite">
+      <div class="photo-wrap" id="photoWrap">
+        <div class="photo-empty" id="photoEmpty" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 6l9 12 9-12M3 6h18M3 6l6 6m12-6l-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>No photo available</div>
+        </div>
+        <img id="photo" alt="" class="loading">
+        <div class="photo-skeleton" id="skeleton"></div>
+        <div class="region-badges" id="regionBadges"></div>
+        <div class="dimorphic-note" id="dimorphicNote" hidden>♂ ♀ differ</div>
+      </div>
+
+      <div class="card-body" id="cardBody">
+        <!-- Dynamically populated by mode -->
+      </div>
+    </article>
+  </section>
+
+  <div class="actions">
+    <button type="button" class="btn btn-secondary" id="skipBtn">Skip</button>
+    <button type="button" class="btn btn-primary" id="nextBtn">Next bird →</button>
+  </div>
+
+  <footer>
+    <div>Photos &amp; summaries served by <a href="https://en.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> · Contributors retain rights (CC BY-SA)</div>
+    <div class="attribution">Built with love for Lily &amp; Gabriel · Happy birding 🐦</div>
+  </footer>
+</div>
+
+<script>
+  // ===== State =====
+  const state = {
+    birds: [],
+    pool: [],
+    current: null,
+    mode: 'browse',
+    region: 'all',
+    set: 'starter',
+    revealed: false,
+    quizChoices: [],
+    quizAnswered: false,
+    score: 0,
+    attempts: 0,
+    streak: 0,
+    recentIds: [],
+    imgCache: new Map(), // wiki title -> Promise<{src, extract}>
+  };
+
+  const REGION_NAMES = { P: 'Prairies', M: 'Rockies', I: 'Interior BC', C: 'Coast' };
+  const ENCOURAGEMENTS = [
+    "Almost! It's the {name}",
+    "Close one — this is the {name}",
+    "That's actually the {name}",
+    "Not quite — meet the {name}",
+    "Tricky! It's the {name}"
+  ];
+  const PRAISE = [
+    "Nailed it!",
+    "Right on!",
+    "Well spotted!",
+    "Good eye!",
+    "That's the one!",
+    "Birder brain!",
+    "Excellent!"
+  ];
+
+  // ===== DOM =====
+  const $ = id => document.getElementById(id);
+  const el = {
+    card: $('card'),
+    photo: $('photo'),
+    photoEmpty: $('photoEmpty'),
+    skeleton: $('skeleton'),
+    regionBadges: $('regionBadges'),
+    dimorphicNote: $('dimorphicNote'),
+    cardBody: $('cardBody'),
+    skipBtn: $('skipBtn'),
+    nextBtn: $('nextBtn'),
+    poolCount: $('poolCount'),
+    score: $('score'),
+    attempts: $('attempts'),
+    streak: $('streak'),
+    scoreWrap: $('scoreWrap'),
+    streakWrap: $('streakWrap'),
+  };
+
+  // ===== Data loading =====
+  async function loadBirds() {
+    try {
+      const res = await fetch('birds.json');
+      const data = await res.json();
+      state.birds = data.birds;
+    } catch (e) {
+      console.error('Could not load birds.json', e);
+      showError("Couldn't load bird data. Make sure birds.json is in the same folder as index.html.");
+    }
+  }
+
+  function rebuildPool() {
+    state.pool = state.birds.filter(b => {
+      if (state.region !== 'all' && !b.regions.includes(state.region)) return false;
+      if (state.set === 'starter' && !b.starter) return false;
+      return true;
+    });
+    el.poolCount.textContent = state.pool.length;
+  }
+
+  // ===== Wikipedia image loader =====
+  async function fetchBirdInfo(bird) {
+    if (state.imgCache.has(bird.wiki)) return state.imgCache.get(bird.wiki);
+
+    const promise = (async () => {
+      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bird.wiki)}`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Wikipedia fetch failed: ' + res.status);
+        const data = await res.json();
+        // Prefer the original/full-res image; thumbnail is the fallback
+        const src = (data.originalimage && data.originalimage.source)
+                 || (data.thumbnail && data.thumbnail.source)
+                 || null;
+        // For the kid-facing card we don't show extracts, but we keep them around
+        return { src, extract: data.extract || '' };
+      } catch (e) {
+        console.warn('Failed to load', bird.name, e);
+        return { src: null, extract: '' };
+      }
+    })();
+
+    state.imgCache.set(bird.wiki, promise);
+    return promise;
+  }
+
+  // ===== Bird selection =====
+  function pickBird() {
+    if (!state.pool.length) return null;
+    // Avoid repeating the last ~30% of pool in short rotation
+    const avoidCount = Math.min(Math.floor(state.pool.length * 0.3), 12);
+    const avoid = new Set(state.recentIds.slice(-avoidCount));
+    const available = state.pool.filter(b => !avoid.has(b.name));
+    const source = available.length ? available : state.pool;
+    const choice = source[Math.floor(Math.random() * source.length)];
+    state.recentIds.push(choice.name);
+    if (state.recentIds.length > 60) state.recentIds.shift();
+    return choice;
+  }
+
+  function pickQuizChoices(correct) {
+    const choices = [correct];
+    const pool = state.birds.filter(b => b.name !== correct.name);
+    // Mix difficulty: prefer same region first
+    const sameRegion = pool.filter(b => b.regions.some(r => correct.regions.includes(r)));
+    const source = sameRegion.length >= 3 ? sameRegion : pool;
+    while (choices.length < 4 && source.length > 0) {
+      const idx = Math.floor(Math.random() * source.length);
+      const pick = source.splice(idx, 1)[0];
+      if (!choices.some(c => c.name === pick.name)) choices.push(pick);
+    }
+    // Shuffle
+    for (let i = choices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [choices[i], choices[j]] = [choices[j], choices[i]];
+    }
+    return choices;
+  }
+
+  // ===== Rendering =====
+  async function renderCard() {
+    const bird = state.current;
+    if (!bird) {
+      el.cardBody.innerHTML = '<div class="empty-state"><h3>No birds in pool</h3><p>Try a different region or switch to the full set.</p></div>';
+      el.photo.hidden = true;
+      el.skeleton.classList.add('hidden');
+      el.photoEmpty.hidden = true;
+      el.regionBadges.innerHTML = '';
+      el.dimorphicNote.hidden = true;
+      return;
+    }
+
+    // Reset photo UI
+    el.photo.hidden = false;
+    el.photo.classList.add('loading');
+    el.photo.alt = '';
+    el.photoEmpty.hidden = true;
+    el.skeleton.classList.remove('hidden');
+
+    // Region badges (always shown, helps learning)
+    el.regionBadges.innerHTML = bird.regions
+      .map(r => `<span class="region-badge" title="${REGION_NAMES[r]}">${REGION_NAMES[r]}</span>`)
+      .join('');
+
+    el.dimorphicNote.hidden = !bird.dimorphic;
+
+    // Render the body according to mode
+    if (state.mode === 'browse') {
+      renderBrowse(bird);
+    } else {
+      renderQuiz(bird);
+    }
+
+    // Load photo
+    const info = await fetchBirdInfo(bird);
+    if (state.current !== bird) return; // user moved on
+    if (info.src) {
+      el.photo.src = info.src;
+      el.photo.alt = (state.mode === 'browse' && !state.revealed) ? 'A bird photo — reveal to see its name' : bird.name;
+      el.photo.onload = () => {
+        el.photo.classList.remove('loading');
+        el.skeleton.classList.add('hidden');
+      };
+      el.photo.onerror = () => {
+        el.skeleton.classList.add('hidden');
+        el.photo.hidden = true;
+        el.photoEmpty.hidden = false;
+      };
+    } else {
+      el.skeleton.classList.add('hidden');
+      el.photo.hidden = true;
+      el.photoEmpty.hidden = false;
+    }
+  }
+
+  function renderBrowse(bird) {
+    state.revealed = false;
+    el.cardBody.innerHTML = `
+      <div class="reveal-prompt" id="revealPrompt">
+        Tap the card (or press <span class="hint-key">Space</span>) to reveal
+      </div>
+    `;
+    el.skipBtn.hidden = false;
+    el.skipBtn.textContent = 'Reveal';
+    el.nextBtn.textContent = 'Next bird →';
+  }
+
+  function renderReveal(bird) {
+    state.revealed = true;
+    const regionList = bird.regions.map(r => REGION_NAMES[r]).join(' · ');
+    el.cardBody.innerHTML = `
+      <div class="bird-name">${bird.name}</div>
+      <div class="bird-sci">${bird.sci}</div>
+      <div class="bird-meta">
+        <span class="meta-chip">${regionList}</span>
+        ${bird.dimorphic ? '<span class="meta-chip">Male &amp; female differ</span>' : ''}
+      </div>
+    `;
+    el.photo.alt = bird.name;
+    el.skipBtn.hidden = true;
+  }
+
+  function renderQuiz(bird) {
+    state.quizChoices = pickQuizChoices(bird);
+    state.quizAnswered = false;
+    const choicesHTML = state.quizChoices.map((c, i) => `
+      <button type="button" class="choice-btn" data-choice="${i}">${c.name}</button>
+    `).join('');
+    el.cardBody.innerHTML = `
+      <div class="choices">${choicesHTML}</div>
+      <div class="feedback" id="feedback">&nbsp;</div>
+    `;
+    el.cardBody.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleQuizChoice(parseInt(btn.dataset.choice, 10), btn));
+    });
+    el.skipBtn.hidden = false;
+    el.skipBtn.textContent = 'Skip';
+    el.nextBtn.textContent = 'Next →';
+  }
+
+  function handleQuizChoice(idx, btnEl) {
+    if (state.quizAnswered) return;
+    state.quizAnswered = true;
+    const chosen = state.quizChoices[idx];
+    const correct = state.current;
+    const feedback = $('feedback');
+    state.attempts++;
+
+    if (chosen.name === correct.name) {
+      btnEl.classList.add('correct');
+      state.score++;
+      state.streak++;
+      feedback.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)];
+      feedback.className = 'feedback correct';
+    } else {
+      btnEl.classList.add('wrong');
+      state.streak = 0;
+      // Highlight the correct answer
+      const correctIdx = state.quizChoices.findIndex(c => c.name === correct.name);
+      el.cardBody.querySelectorAll('.choice-btn')[correctIdx].classList.add('reveal-correct');
+      const template = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+      feedback.textContent = template.replace('{name}', correct.name);
+      feedback.className = 'feedback encouraging';
+    }
+    el.photo.alt = correct.name;
+
+    // Disable all choice buttons
+    el.cardBody.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    updateScoreboard();
+  }
+
+  function updateScoreboard() {
+    el.score.textContent = state.score;
+    el.attempts.textContent = state.attempts;
+    el.streak.textContent = state.streak;
+  }
+
+  // ===== Actions =====
+  function nextBird() {
+    state.current = pickBird();
+    renderCard();
+  }
+
+  function revealOrSkip() {
+    if (state.mode === 'browse') {
+      if (!state.revealed && state.current) {
+        renderReveal(state.current);
+      } else {
+        nextBird();
+      }
+    } else {
+      // Quiz: skip counts as incorrect with no streak loss message
+      if (!state.quizAnswered) {
+        state.quizAnswered = true;
+        state.attempts++;
+        state.streak = 0;
+        const correctIdx = state.quizChoices.findIndex(c => c.name === state.current.name);
+        el.cardBody.querySelectorAll('.choice-btn').forEach((b, i) => {
+          b.disabled = true;
+          if (i === correctIdx) b.classList.add('reveal-correct');
+        });
+        $('feedback').textContent = `It was the ${state.current.name}`;
+        $('feedback').className = 'feedback encouraging';
+        el.photo.alt = state.current.name;
+        updateScoreboard();
+      } else {
+        nextBird();
+      }
+    }
+  }
+
+  // ===== Controls =====
+  function setMode(mode) {
+    state.mode = mode;
+    document.querySelectorAll('[data-mode]').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    });
+    const quizOnly = document.querySelectorAll('.quiz-only');
+    quizOnly.forEach(e => e.hidden = (mode !== 'quiz'));
+    if (mode === 'quiz') {
+      state.score = 0; state.attempts = 0; state.streak = 0;
+      updateScoreboard();
+    }
+    nextBird();
+  }
+
+  function setRegion(region) {
+    state.region = region;
+    document.querySelectorAll('[data-region]').forEach(b => {
+      b.classList.toggle('active', b.dataset.region === region);
+    });
+    rebuildPool();
+    nextBird();
+  }
+
+  function setSet(s) {
+    state.set = s;
+    document.querySelectorAll('[data-set]').forEach(b => {
+      b.classList.toggle('active', b.dataset.set === s);
+    });
+    rebuildPool();
+    nextBird();
+  }
+
+  // ===== Event wiring =====
+  document.querySelectorAll('[data-mode]').forEach(b => {
+    b.addEventListener('click', () => setMode(b.dataset.mode));
+  });
+  document.querySelectorAll('[data-region]').forEach(b => {
+    b.addEventListener('click', () => setRegion(b.dataset.region));
+  });
+  document.querySelectorAll('[data-set]').forEach(b => {
+    b.addEventListener('click', () => setSet(b.dataset.set));
+  });
+
+  el.nextBtn.addEventListener('click', nextBird);
+  el.skipBtn.addEventListener('click', revealOrSkip);
+
+  // Click on card to reveal (browse mode)
+  el.card.addEventListener('click', (e) => {
+    if (state.mode !== 'browse') return;
+    // Only respond to card clicks, not button clicks
+    if (e.target.closest('button')) return;
+    if (!state.revealed && state.current) renderReveal(state.current);
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, textarea')) return;
+    if (e.key === ' ' || e.code === 'Space') {
+      e.preventDefault();
+      if (state.mode === 'browse' && state.current && !state.revealed) {
+        renderReveal(state.current);
+      } else {
+        nextBird();
+      }
+    } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+      nextBird();
+    } else if (state.mode === 'quiz' && !state.quizAnswered && /^[1-4]$/.test(e.key)) {
+      const idx = parseInt(e.key, 10) - 1;
+      const btn = el.cardBody.querySelectorAll('.choice-btn')[idx];
+      if (btn) btn.click();
+    }
+  });
+
+  // ===== Error =====
+  function showError(msg) {
+    el.cardBody.innerHTML = `<div class="empty-state"><h3>Oops</h3><p>${msg}</p></div>`;
+  }
+
+  // ===== Boot =====
+  (async function init() {
+    await loadBirds();
+    rebuildPool();
+    nextBird();
+  })();
+</script>
+
+</body>
+</html>
