@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bird Photo Review — Crop Tuning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5eedc;
+    --paper: #fbf7ec;
+    --forest: #2d4a2b;
+    --forest-light: #4a6b48;
+    --ochre: #c17f3b;
+    --ochre-light: #d9a365;
+    --ink: #2a241c;
+    --ink-soft: #5a4e3e;
+    --leaf: #e8ebdc;
+    --success: #5c7a3a;
+    --error: #a84b3a;
+    --shadow: 0 2px 8px rgba(42, 36, 28, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    min-height: 100vh;
+    padding-bottom: 100px;
+  }
+
+  header {
+    background: var(--paper);
+    border-bottom: 1px solid rgba(42,36,28,0.12);
+    padding: 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: var(--shadow);
+  }
+
+  .title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--forest);
+  }
+
+  .subtitle {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .progress {
+    height: 4px;
+    background: var(--leaf);
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--forest);
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .progress-text {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: var(--leaf);
+    color: var(--forest);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--forest); color: var(--paper); }
+  .filter-btn:hover:not(.active) { background: #d4dbc7; }
+
+  .grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--paper);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(42,36,28,0.08);
+    transition: border-color 0.2s;
+  }
+
+  .card.adjusted {
+    border-color: var(--ochre);
+    box-shadow: 0 0 0 2px rgba(193,127,59,0.25), var(--shadow);
+  }
+
+  .thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--leaf);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    background: var(--leaf);
+  }
+
+  .thumb.mode-contain img {
+    object-fit: contain;
+    background: #2a241c;
+  }
+  .thumb.pos-top img { object-position: center top; }
+  .thumb.pos-bottom img { object-position: center bottom; }
+
+  .thumb-skeleton {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite;
+  }
+  .thumb-skeleton.hidden { display: none; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--ochre);
+    color: var(--paper);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .card-info {
+    padding: 10px 12px;
+  }
+
+  .card-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--forest);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .crop-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+
+  .crop-btn {
+    padding: 6px 2px;
+    background: var(--leaf);
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+
+  .crop-btn:hover:not(.active) {
+    background: #d4dbc7;
+    color: var(--forest);
+  }
+
+  .crop-btn.active {
+    background: var(--forest);
+    color: var(--paper);
+  }
+
+  .export-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    border-top: 1px solid rgba(42,36,28,0.12);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 -4px 20px rgba(42,36,28,0.08);
+    z-index: 10;
+  }
+
+  .export-stats {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+  }
+  .export-stats strong {
+    color: var(--ochre);
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.1rem;
+  }
+
+  .export-actions { display: flex; gap: 8px; }
+
+  .btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--forest);
+    color: var(--paper);
+  }
+  .btn-primary:hover { background: var(--forest-light); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--forest);
+    border: 1px solid var(--forest);
+  }
+  .btn-secondary:hover { background: var(--leaf); }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(42,36,28,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .modal.open { display: flex; }
+  .modal-body {
+    background: var(--paper);
+    border-radius: 14px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(42,36,28,0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--forest);
+    font-size: 1.2rem;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 0 6px;
+  }
+  .modal-content {
+    padding: 16px 20px;
+    flex: 1;
+    overflow: auto;
+  }
+  .modal-content p { margin-bottom: 12px; font-size: 0.92rem; color: var(--ink-soft); }
+  .modal-content textarea {
+    width: 100%;
+    height: 320px;
+    padding: 12px;
+    border: 1px solid rgba(42,36,28,0.15);
+    border-radius: 8px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.78rem;
+    resize: vertical;
+    background: var(--cream);
+  }
+  .modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(42,36,28,0.12);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .toast {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--forest);
+    color: var(--paper);
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">Bird Photo Review</div>
+  <div class="subtitle">Tap a crop option under any bird that looks wrong. Changes save automatically.</div>
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-text" id="progressText">Loading images…</div>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="unadjusted">Unadjusted</button>
+    <button class="filter-btn" data-filter="adjusted">Adjusted only</button>
+  </div>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<div class="export-bar">
+  <div class="export-stats"><strong id="adjustedCount">0</strong> birds adjusted</div>
+  <div class="export-actions">
+    <button class="btn btn-secondary" id="resetBtn">Reset all</button>
+    <button class="btn btn-primary" id="exportBtn" disabled>Export JSON</button>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-body">
+    <div class="modal-header">
+      <h2>Updated birds.json</h2>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-content">
+      <p>Copy this entire block and replace the contents of your <code>birds.json</code> file. Your game will pick up the new crop settings automatically.</p>
+      <textarea id="exportText" readonly></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modalCloseBtn">Close</button>
+      <button class="btn btn-primary" id="copyBtn">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'birdsCropOverrides';
+  let birdsData = null;
+  let overrides = {};
+  let loaded = 0, total = 0;
+  let currentFilter = 'all';
+
+  const $ = id => document.getElementById(id);
+
+  // Load saved overrides
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) overrides = JSON.parse(saved);
+  } catch (e) { overrides = {}; }
+
+  function saveOverrides() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides)); } catch (e) {}
+    updateExportState();
+  }
+
+  function updateExportState() {
+    const count = Object.keys(overrides).length;
+    $('adjustedCount').textContent = count;
+    $('exportBtn').disabled = count === 0;
+  }
+
+  // Thumbnail-size image from Wikipedia
+  async function fetchThumb(wikiTitle) {
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      // Prefer original for accurate crop preview, but it can be large.
+      // Use thumbnail (wider, cheaper) — good enough to judge framing.
+      return (data.originalimage && data.originalimage.source)
+          || (data.thumbnail && data.thumbnail.source)
+          || null;
+    } catch (e) { return null; }
+  }
+
+  // Simple concurrency limiter
+  async function withConcurrency(items, limit, worker) {
+    const queue = items.slice();
+    const runners = Array.from({ length: limit }, async () => {
+      while (queue.length) {
+        const item = queue.shift();
+        await worker(item);
+      }
+    });
+    await Promise.all(runners);
+  }
+
+  function applyCardClass(card, crop, position) {
+    const thumb = card.querySelector('.thumb');
+    thumb.classList.toggle('mode-contain', crop === 'contain');
+    thumb.classList.toggle('pos-top', position === 'center top');
+    thumb.classList.toggle('pos-bottom', position === 'center bottom');
+  }
+
+  function refreshCard(card, bird) {
+    const ov = overrides[bird.name];
+    const crop = ov ? ov.crop : 'cover';
+    const position = ov ? ov.position : 'center center';
+    applyCardClass(card, crop, position);
+    card.classList.toggle('adjusted', !!ov);
+
+    card.querySelectorAll('.crop-btn').forEach(btn => {
+      const isActive = btn.dataset.crop === crop && btn.dataset.pos === position;
+      btn.classList.toggle('active', isActive);
+    });
+  }
+
+  function buildCard(bird) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.name = bird.name;
+    card.innerHTML = `
+      <div class="thumb">
+        <div class="thumb-skeleton"></div>
+        <img alt="${bird.name}" loading="lazy">
+        ${overrides[bird.name] ? '<div class="badge">Adjusted</div>' : ''}
+      </div>
+      <div class="card-info">
+        <div class="card-name">${bird.name}</div>
+        <div class="crop-buttons">
+          <button class="crop-btn" data-crop="contain" data-pos="center center" title="Show the whole image">Full</button>
+          <button class="crop-btn" data-crop="cover" data-pos="center top" title="Crop, keep top">Top</button>
+          <button class="crop-btn" data-crop="cover" data-pos="center center" title="Default center crop">Center</button>
+          <button class="crop-btn" data-crop="cover" data-pos="center bottom" title="Crop, keep bottom">Bottom</button>
+        </div>
+      </div>
+    `;
+
+    card.querySelectorAll('.crop-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const crop = btn.dataset.crop;
+        const position = btn.dataset.pos;
+        // Center-cover is the default — remove override if selected
+        if (crop === 'cover' && position === 'center center') {
+          delete overrides[bird.name];
+          const badge = card.querySelector('.badge');
+          if (badge) badge.remove();
+        } else {
+          overrides[bird.name] = { crop, position };
+          if (!card.querySelector('.badge')) {
+            const b = document.createElement('div');
+            b.className = 'badge';
+            b.textContent = 'Adjusted';
+            card.querySelector('.thumb').appendChild(b);
+          }
+        }
+        saveOverrides();
+        refreshCard(card, bird);
+        applyFilter();
+      });
+    });
+
+    refreshCard(card, bird);
+    return card;
+  }
+
+  async function loadImageForCard(card, bird) {
+    const img = card.querySelector('img');
+    const skel = card.querySelector('.thumb-skeleton');
+    const src = await fetchThumb(bird.wiki);
+    if (src) {
+      img.src = src;
+      img.onload = () => skel.classList.add('hidden');
+      img.onerror = () => { skel.classList.add('hidden'); img.alt = '(no photo)'; };
+    } else {
+      skel.classList.add('hidden');
+      img.alt = '(no photo)';
+    }
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    $('progressBar').style.width = pct + '%';
+    $('progressText').textContent = loaded < total
+      ? `Loading images… ${loaded} / ${total}`
+      : `All ${total} images loaded`;
+    if (loaded === total) {
+      setTimeout(() => {
+        $('progressBar').parentElement.style.display = 'none';
+        $('progressText').style.display = 'none';
+      }, 1500);
+    }
+  }
+
+  function applyFilter() {
+    document.querySelectorAll('.card').forEach(card => {
+      const isAdjusted = card.classList.contains('adjusted');
+      let show = true;
+      if (currentFilter === 'adjusted') show = isAdjusted;
+      else if (currentFilter === 'unadjusted') show = !isAdjusted;
+      card.style.display = show ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  // Reset all
+  $('resetBtn').addEventListener('click', () => {
+    if (!Object.keys(overrides).length) return;
+    if (!confirm('Clear all crop adjustments?')) return;
+    overrides = {};
+    saveOverrides();
+    document.querySelectorAll('.card').forEach(card => {
+      const bird = birdsData.birds.find(b => b.name === card.dataset.name);
+      const badge = card.querySelector('.badge');
+      if (badge) badge.remove();
+      refreshCard(card, bird);
+    });
+    applyFilter();
+    showToast('All adjustments cleared');
+  });
+
+  // Export
+  $('exportBtn').addEventListener('click', () => {
+    const updated = {
+      ...birdsData,
+      birds: birdsData.birds.map(b => {
+        const ov = overrides[b.name];
+        if (!ov) {
+          // Strip any pre-existing crop/position so we end up with a clean baseline
+          const { crop, position, ...rest } = b;
+          return rest;
+        }
+        return { ...b, crop: ov.crop, position: ov.position };
+      })
+    };
+    $('exportText').value = JSON.stringify(updated, null, 2);
+    $('modal').classList.add('open');
+  });
+
+  $('modalClose').addEventListener('click', () => $('modal').classList.remove('open'));
+  $('modalCloseBtn').addEventListener('click', () => $('modal').classList.remove('open'));
+  $('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') $('modal').classList.remove('open');
+  });
+
+  $('copyBtn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText($('exportText').value);
+      showToast('Copied! Now paste into birds.json');
+    } catch (e) {
+      $('exportText').select();
+      showToast('Select and copy the text manually');
+    }
+  });
+
+  function showToast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // Boot
+  (async function() {
+    try {
+      const res = await fetch('birds.json');
+      birdsData = await res.json();
+    } catch (e) {
+      $('grid').innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--error);">Could not load birds.json. Make sure it\'s in the same folder and this page is served over http (not a local file).</p>';
+      return;
+    }
+
+    total = birdsData.birds.length;
+    // Seed overrides from any existing crop/position in the file
+    birdsData.birds.forEach(b => {
+      if (b.crop || b.position) {
+        overrides[b.name] = {
+          crop: b.crop || 'cover',
+          position: b.position || 'center center'
+        };
+      }
+    });
+    updateExportState();
+
+    const grid = $('grid');
+    const cards = birdsData.birds.map(b => {
+      const card = buildCard(b);
+      grid.appendChild(card);
+      return { card, bird: b };
+    });
+
+    // Load images with concurrency limit
+    await withConcurrency(cards, 8, async ({ card, bird }) => {
+      await loadImageForCard(card, bird);
+    });
+  })();
+</script>
+
+</body>
+</html>

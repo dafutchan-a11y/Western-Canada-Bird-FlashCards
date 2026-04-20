@@ -766,6 +766,16 @@
     const info = await fetchBirdInfo(bird);
     if (state.current !== bird) return; // user moved on
     if (info.src) {
+      // Apply per-bird crop overrides if present
+      const crop = bird.crop || 'cover';
+      const position = bird.position || 'center center';
+      el.photo.style.objectFit = crop;
+      el.photo.style.objectPosition = position;
+      // If contained (letterboxed), give it a dark backdrop so the frame looks intentional
+      el.photo.parentElement.style.background = (crop === 'contain')
+        ? '#2a241c'
+        : 'linear-gradient(135deg, var(--leaf), var(--cream-warm))';
+
       el.photo.src = info.src;
       el.photo.alt = (state.mode === 'browse' && !state.revealed) ? 'A bird photo — reveal to see its name' : bird.name;
       el.photo.onload = () => {
