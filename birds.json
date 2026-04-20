@@ -1304,17 +1304,7 @@
       "dimorphic": false,
       "starter": false
     },
-    {
-      "name": "House Wren",
-      "sci": "Troglodytes aedon",
-      "wiki": "House wren",
-      "regions": [
-        "P",
-        "I"
-      ],
-      "dimorphic": false,
-      "starter": false
-    },
+   { "name": "Northern House Wren", "sci": "Troglodytes aedon", "wiki": "Northern house wren", "regions": ["P","I"], "dimorphic": false, "starter": false },
     {
       "name": "Pacific Wren",
       "sci": "Troglodytes pacificus",
