@@ -1426,10 +1426,33 @@
         return true;
       });
     }
-    state.deck = shuffle(pool);
+
+    // When sex-id is on, expand sex-eligible species into two entries (♂ and ♀).
+    // Build the deck as {bird, sex} entries, shuffle, then split into deck + cardSexes.
+    let entries;
+    if (state.sexIdEnabled) {
+      entries = [];
+      pool.forEach(b => {
+        if (sexIdEligible(b)) {
+          entries.push({ bird: b, sex: 'm' });
+          entries.push({ bird: b, sex: 'f' });
+        } else {
+          entries.push({ bird: b, sex: null });
+        }
+      });
+    } else {
+      entries = pool.map(b => ({ bird: b, sex: null }));
+    }
+
+    const shuffled = shuffle(entries);
+    state.deck = shuffled.map(e => e.bird);
+    state.cardSexes = {};
+    shuffled.forEach((e, i) => {
+      if (e.sex) state.cardSexes[i] = e.sex;
+    });
+
     state.pos = 0;
     state.seenPositions = new Set();
-    state.cardSexes = {};
     state.score = 0;
     state.attempts = 0;
     state.streak = 0;
@@ -2084,10 +2107,8 @@
   el.sexIdToggle.addEventListener('change', (e) => {
     state.sexIdEnabled = e.target.checked;
     el.sexIdToggleRow.classList.toggle('active', state.sexIdEnabled);
-    // Clear cached sex assignments and seen-state so cards re-prompt with the new setting
-    state.cardSexes = {};
-    state.seenPositions = new Set();
-    saveProfileData();
+    // Rebuild the deck so sex-eligible species expand to two entries (or collapse back to one)
+    rebuildDeck();
     renderCard();
   });
 
