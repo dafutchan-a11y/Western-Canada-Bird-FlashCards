@@ -763,6 +763,96 @@
     opacity: 0.4;
     cursor: not-allowed;
   }
+
+  /* ---- Sex ID toggle ---- */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--leaf);
+    border-radius: 12px;
+  }
+  .toggle-row.active {
+    background: linear-gradient(135deg, rgba(193,127,59,0.18), rgba(217,163,101,0.12));
+    border: 1px solid rgba(193,127,59,0.35);
+  }
+  .toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--forest);
+    font-size: 0.9rem;
+  }
+  .toggle-label .sex-glyph {
+    font-size: 1.25rem;
+    color: var(--ochre);
+    line-height: 1;
+  }
+  .toggle-label .toggle-hint {
+    display: block;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 0.75rem;
+    margin-top: 1px;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    flex: 0 0 auto;
+    cursor: pointer;
+  }
+  .toggle-switch input { display: none; }
+  .toggle-switch .track {
+    position: absolute;
+    inset: 0;
+    background: rgba(42, 36, 28, 0.2);
+    border-radius: 100px;
+    transition: background 0.2s;
+  }
+  .toggle-switch .thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 20px; height: 20px;
+    background: var(--paper);
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-switch input:checked ~ .track { background: var(--ochre); }
+  .toggle-switch input:checked ~ .thumb { transform: translateX(20px); }
+
+  /* ---- Sex ID badge on photo ---- */
+  .sex-id-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--ochre);
+    color: var(--paper);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    z-index: 2;
+    line-height: 1;
+  }
+  .sex-id-badge.show { display: flex; }
+
+  /* Sex prefix on the bird name (♂ Mallard / ♀ Mallard) */
+  .sex-prefix {
+    color: var(--ochre);
+    font-weight: 600;
+    margin-right: 6px;
+  }
   .counter-bar {
     display: flex;
     align-items: center;
@@ -1024,6 +1114,21 @@
       <button type="button" id="clearMissedBtn" disabled title="Clear the missed list">Clear missed</button>
     </div>
 
+    <label class="toggle-row" id="sexIdToggleRow">
+      <span class="toggle-label">
+        <span class="sex-glyph">⚥</span>
+        <span>
+          ID sex too
+          <span class="toggle-hint">For dimorphic birds, name the species <em>and</em> sex</span>
+        </span>
+      </span>
+      <span class="toggle-switch">
+        <input type="checkbox" id="sexIdToggle">
+        <span class="track"></span>
+        <span class="thumb"></span>
+      </span>
+    </label>
+
     <div class="counter-bar">
       <div class="counter-main">
         <span class="counter-num" id="counterNum">—</span>
@@ -1043,6 +1148,7 @@
   <section class="card-stage">
     <article class="card" id="card" aria-live="polite">
       <div class="photo-wrap" id="photoWrap">
+        <div class="sex-id-badge" id="sexIdBadge" title="Identify the sex too">⚥</div>
         <div class="photo-empty" id="photoEmpty" hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M3 6l9 12 9-12M3 6h18M3 6l6 6m12-6l-6 6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1118,14 +1224,16 @@
     if (!state.profile) return;
     try {
       const data = {
-        deck: state.deck.map(b => b.name),  // store just names; rehydrate at load
+        deck: state.deck.map(b => b.name),
         pos: state.pos,
         seenPositions: Array.from(state.seenPositions),
         missed: Array.from(state.missed),
         mastered: Array.from(state.mastered),
+        cardSexes: state.cardSexes,
         mode: state.mode,
         region: state.region,
         set: state.set,
+        sexIdEnabled: state.sexIdEnabled,
         score: state.score,
         attempts: state.attempts,
         streak: state.streak
@@ -1144,6 +1252,7 @@
       mode: 'browse',
       region: 'all',
       set: 'starter',
+      sexIdEnabled: false,
       score: 0,
       attempts: 0,
       streak: 0
@@ -1153,16 +1262,18 @@
   // ===== State =====
   const state = {
     birds: [],
-    profile: null,        // {id, name, initial} or null
+    profile: null,
     deck: [],
     pos: 0,
     seenPositions: new Set(),
-    missed: new Set(),    // bird names the active profile got wrong (review list)
-    mastered: new Set(),  // bird names the active profile got right and never since missed
+    missed: new Set(),
+    mastered: new Set(),
+    cardSexes: {},        // pos -> 'm' | 'f' | null  (the sex shown for each deck position)
     current: null,
     mode: 'browse',
     region: 'all',
     set: 'starter',
+    sexIdEnabled: false,
     revealed: false,
     quizChoices: [],
     quizAnswered: false,
@@ -1222,6 +1333,9 @@
     missedCount: $('missedCount'),
     masteredCount: $('masteredCount'),
     clearMissedBtn: $('clearMissedBtn'),
+    sexIdToggle: $('sexIdToggle'),
+    sexIdToggleRow: $('sexIdToggleRow'),
+    sexIdBadge: $('sexIdBadge'),
   };
 
   // ===== Data loading =====
@@ -1246,6 +1360,44 @@
     return a;
   }
 
+  // ===== Sex ID helpers =====
+  // A bird "qualifies for sex ID" iff dimorphic + has a femaleImage URL + not skipped
+  function sexIdEligible(bird) {
+    return !!(bird && bird.dimorphic && bird.femaleImage && !bird.sexIdSkip);
+  }
+
+  // Determines the sex shown for the current card. Returns 'm', 'f', or null.
+  // null means sex ID does not apply (toggle off, or bird not eligible).
+  function getDisplaySex(bird, deckPos) {
+    if (!state.sexIdEnabled) return null;
+    if (!sexIdEligible(bird)) return null;
+    // If we've already assigned a sex to this position, keep it sticky
+    if (state.cardSexes[deckPos] === 'm' || state.cardSexes[deckPos] === 'f') {
+      return state.cardSexes[deckPos];
+    }
+    const sex = Math.random() < 0.5 ? 'm' : 'f';
+    state.cardSexes[deckPos] = sex;
+    return sex;
+  }
+
+  // The key used in missed/mastered sets — unique per bird+sex when sex-id applies
+  function birdKey(bird, sex) {
+    if (!sex) return bird.name;
+    return bird.name + ':' + sex;
+  }
+
+  // Pretty bird-name string with sex prefix, e.g. "♂ Mallard"
+  function displayName(bird, sex) {
+    if (!sex) return bird.name;
+    const sym = sex === 'm' ? '♂' : '♀';
+    return `<span class="sex-prefix">${sym}</span>${bird.name}`;
+  }
+  function displayNamePlain(bird, sex) {
+    if (!sex) return bird.name;
+    const sym = sex === 'm' ? '♂' : '♀';
+    return `${sym} ${bird.name}`;
+  }
+
   // Wikipedia thumbnail URLs look like .../thumb/a/aa/Filename.jpg/320px-Filename.jpg
   // We can request a different size by changing the NNNpx- prefix in the last path segment.
   function upgradeImageUrl(url, targetWidth = 720) {
@@ -1259,9 +1411,13 @@
   function rebuildDeck() {
     let pool;
     if (state.set === 'missed') {
-      // Review mode: only birds the active profile has on their missed list
-      pool = state.birds.filter(b => state.missed.has(b.name));
-      // Region filter still applies (so kids can review just Coast birds, etc.)
+      // Review mode: include any bird that has any missed entry (bare name, or "name:m"/"name:f")
+      pool = state.birds.filter(b => {
+        if (state.missed.has(b.name)) return true;
+        if (state.missed.has(b.name + ':m')) return true;
+        if (state.missed.has(b.name + ':f')) return true;
+        return false;
+      });
       if (state.region !== 'all') pool = pool.filter(b => b.regions.includes(state.region));
     } else {
       pool = state.birds.filter(b => {
@@ -1273,6 +1429,7 @@
     state.deck = shuffle(pool);
     state.pos = 0;
     state.seenPositions = new Set();
+    state.cardSexes = {};
     state.score = 0;
     state.attempts = 0;
     state.streak = 0;
@@ -1357,16 +1514,44 @@
     }
   }
 
-  function pickQuizChoices(correct) {
-    const choices = [correct];
-    const pool = state.birds.filter(b => b.name !== correct.name);
-    const sameRegion = pool.filter(b => b.regions.some(r => correct.regions.includes(r)));
-    const source = sameRegion.length >= 3 ? sameRegion.slice() : pool.slice();
-    while (choices.length < 4 && source.length > 0) {
-      const idx = Math.floor(Math.random() * source.length);
-      const pick = source.splice(idx, 1)[0];
-      if (!choices.some(c => c.name === pick.name)) choices.push(pick);
+  // Generates 4 quiz choices.
+  // Without sex-id: 4 different species (correct + 3 distractors).
+  // With sex-id (correct bird is sex-eligible): 2 sex variants of correct + 2 sex variants of one similar
+  //   sex-eligible distractor → 4 ♂/♀ entries total. This prevents leaking that the answer involves sex.
+  function pickQuizChoices(correct, correctSex) {
+    if (!correctSex) {
+      // Original logic — non-sex-id quiz round
+      const choices = [{ bird: correct, sex: null }];
+      const pool = state.birds.filter(b => b.name !== correct.name);
+      const sameRegion = pool.filter(b => b.regions.some(r => correct.regions.includes(r)));
+      const source = sameRegion.length >= 3 ? sameRegion.slice() : pool.slice();
+      while (choices.length < 4 && source.length > 0) {
+        const idx = Math.floor(Math.random() * source.length);
+        const pick = source.splice(idx, 1)[0];
+        if (!choices.some(c => c.bird.name === pick.name)) choices.push({ bird: pick, sex: null });
+      }
+      return shuffle(choices);
     }
+    // Sex-id round: pick 1 distractor species that's also sex-eligible, prefer same region
+    const otherEligible = state.birds.filter(b =>
+      b.name !== correct.name && sexIdEligible(b)
+    );
+    const sameRegion = otherEligible.filter(b => b.regions.some(r => correct.regions.includes(r)));
+    const sourcePool = sameRegion.length >= 1 ? sameRegion : otherEligible;
+    let distractor;
+    if (sourcePool.length) {
+      distractor = sourcePool[Math.floor(Math.random() * sourcePool.length)];
+    }
+    if (!distractor) {
+      // Fallback: no sex-eligible distractor — fall back to original style
+      return pickQuizChoices(correct, null);
+    }
+    const choices = [
+      { bird: correct, sex: 'm' },
+      { bird: correct, sex: 'f' },
+      { bird: distractor, sex: 'm' },
+      { bird: distractor, sex: 'f' }
+    ];
     return shuffle(choices);
   }
 
@@ -1453,7 +1638,6 @@
     const bird = state.deck[state.pos];
     state.current = bird;
 
-    // "Already seen" = this position has been rendered fresh at least once before
     const alreadySeen = state.seenPositions.has(state.pos);
     state.seenPositions.add(state.pos);
 
@@ -1464,10 +1648,14 @@
       el.photoEmpty.hidden = true;
       el.regionBadges.innerHTML = '';
       el.dimorphicNote.hidden = true;
+      el.sexIdBadge.classList.remove('show');
       el.skipBtn.hidden = true;
       updateCounter();
       return;
     }
+
+    // Decide the sex shown for this card (sticky per deck position)
+    const sex = getDisplaySex(bird, state.pos);
 
     // Reset photo UI
     el.photo.hidden = false;
@@ -1476,28 +1664,34 @@
     el.photoEmpty.hidden = true;
     el.skeleton.classList.remove('hidden');
 
+    // Sex ID badge (the ⚥ glyph)
+    el.sexIdBadge.classList.toggle('show', !!sex);
+
     // Region badges
     el.regionBadges.innerHTML = bird.regions
       .map(r => `<span class="region-badge" title="${REGION_NAMES[r]}">${REGION_NAMES[r]}</span>`)
       .join('');
-    el.dimorphicNote.hidden = !bird.dimorphic;
+    // Hide the "male & female differ" note when sex ID is on (the ⚥ badge already says it)
+    el.dimorphicNote.hidden = !bird.dimorphic || !!sex;
 
     // Body content depends on mode + alreadySeen
     if (alreadySeen) {
-      // No judge buttons on review (they already judged this card)
-      renderRevealed(bird, { showJudge: false });
+      renderRevealed(bird, { showJudge: false, sex });
     } else if (state.mode === 'browse') {
-      renderBrowse(bird);
+      renderBrowse(bird, sex);
     } else {
-      renderQuiz(bird);
+      renderQuiz(bird, sex);
     }
     el.nextBtn.textContent = state.mode === 'browse' ? 'Next bird →' : 'Next →';
     updateCounter();
 
-    // Load photo
+    // Load photo — use femaleImage URL when sex is 'f' and the bird has one
     const info = await fetchBirdInfo(bird);
     if (state.current !== bird) return;
-    if (info.src) {
+    const useFemale = sex === 'f' && bird.femaleImage;
+    const photoSrc = useFemale ? bird.femaleImage : (info && info.src);
+
+    if (photoSrc) {
       const crop = bird.crop || 'cover';
       const position = bird.position || 'center center';
       el.photo.style.objectFit = crop;
@@ -1506,10 +1700,10 @@
         ? '#2a241c'
         : 'linear-gradient(135deg, var(--leaf), var(--cream-warm))';
 
-      el.photo.src = info.src;
+      el.photo.src = photoSrc;
       el.photo.alt = (state.mode === 'browse' && !state.revealed && !alreadySeen)
         ? 'A bird photo — reveal to see its name'
-        : bird.name;
+        : displayNamePlain(bird, sex);
       el.photo.onload = () => {
         el.photo.classList.remove('loading');
         el.skeleton.classList.add('hidden');
@@ -1527,7 +1721,7 @@
     }
   }
 
-  function renderBrowse(bird) {
+  function renderBrowse(bird, sex) {
     state.revealed = false;
     el.cardBody.innerHTML = `
       <div class="reveal-prompt">
@@ -1542,6 +1736,7 @@
     state.revealed = true;
     state.quizAnswered = true;
     const showJudge = opts.showJudge !== false;
+    const sex = opts.sex !== undefined ? opts.sex : getDisplaySex(bird, state.pos);
     const regionList = bird.regions.map(r => REGION_NAMES[r]).join(' · ');
     const judgeHTML = showJudge ? `
       <div class="judge-row">
@@ -1551,11 +1746,11 @@
       <div class="judge-feedback" id="judgeFeedback">&nbsp;</div>
     ` : '';
     el.cardBody.innerHTML = `
-      <div class="bird-name">${bird.name}</div>
+      <div class="bird-name">${displayName(bird, sex)}</div>
       <div class="bird-sci">${bird.sci}</div>
       <div class="bird-meta">
         <span class="meta-chip">${regionList}</span>
-        ${bird.dimorphic ? '<span class="meta-chip">Male &amp; female differ</span>' : ''}
+        ${(bird.dimorphic && !sex) ? '<span class="meta-chip">Male &amp; female differ</span>' : ''}
       </div>
       ${judgeHTML}
     `;
@@ -1563,7 +1758,7 @@
       $('gotItBtn').addEventListener('click', () => judgeBird('got'));
       $('missedItBtn').addEventListener('click', () => judgeBird('missed'));
     }
-    el.photo.alt = bird.name;
+    el.photo.alt = displayNamePlain(bird, sex);
     el.skipBtn.hidden = true;
   }
   function renderReveal(bird) { renderRevealed(bird); }
@@ -1572,20 +1767,19 @@
   function judgeBird(result) {
     if (!state.current) return;
     const bird = state.current;
+    const sex = getDisplaySex(bird, state.pos);
+    const key = birdKey(bird, sex);
     if (result === 'got') {
-      // Got it: remove from missed list, add to mastered
-      state.missed.delete(bird.name);
-      state.mastered.add(bird.name);
+      state.missed.delete(key);
+      state.mastered.add(key);
       const fb = $('judgeFeedback');
       if (fb) { fb.textContent = '✓ Got it'; fb.className = 'judge-feedback got'; }
     } else {
-      // Missed: add to missed, remove from mastered
-      state.missed.add(bird.name);
-      state.mastered.delete(bird.name);
+      state.missed.add(key);
+      state.mastered.delete(key);
       const fb = $('judgeFeedback');
       if (fb) { fb.textContent = '✗ Added to review list'; fb.className = 'judge-feedback missed'; }
     }
-    // Disable the judge buttons so they don't double-tap
     const got = $('gotItBtn'), missed = $('missedItBtn');
     if (got) got.disabled = true;
     if (missed) missed.disabled = true;
@@ -1595,11 +1789,11 @@
     setTimeout(() => nextBird(), 450);
   }
 
-  function renderQuiz(bird) {
-    state.quizChoices = pickQuizChoices(bird);
+  function renderQuiz(bird, sex) {
+    state.quizChoices = pickQuizChoices(bird, sex);
     state.quizAnswered = false;
     const choicesHTML = state.quizChoices.map((c, i) => `
-      <button type="button" class="choice-btn" data-choice="${i}">${c.name}</button>
+      <button type="button" class="choice-btn" data-choice="${i}">${displayName(c.bird, c.sex)}</button>
     `).join('');
     el.cardBody.innerHTML = `
       <div class="choices">${choicesHTML}</div>
@@ -1616,32 +1810,35 @@
     if (state.quizAnswered) return;
     state.quizAnswered = true;
     const chosen = state.quizChoices[idx];
-    const correct = state.current;
+    const correctBird = state.current;
+    const correctSex = getDisplaySex(correctBird, state.pos);
+    const correctKey = birdKey(correctBird, correctSex);
+    const chosenKey = birdKey(chosen.bird, chosen.sex);
     const feedback = $('feedback');
     state.attempts++;
 
-    if (chosen.name === correct.name) {
+    if (chosenKey === correctKey) {
       btnEl.classList.add('correct');
       state.score++;
       state.streak++;
       feedback.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)];
       feedback.className = 'feedback correct';
-      // Right in quiz = mastered, removes from missed list
-      state.missed.delete(correct.name);
-      state.mastered.add(correct.name);
+      state.missed.delete(correctKey);
+      state.mastered.add(correctKey);
     } else {
       btnEl.classList.add('wrong');
       state.streak = 0;
-      const correctIdx = state.quizChoices.findIndex(c => c.name === correct.name);
-      el.cardBody.querySelectorAll('.choice-btn')[correctIdx].classList.add('reveal-correct');
+      const correctIdx = state.quizChoices.findIndex(c => birdKey(c.bird, c.sex) === correctKey);
+      if (correctIdx >= 0) {
+        el.cardBody.querySelectorAll('.choice-btn')[correctIdx].classList.add('reveal-correct');
+      }
       const template = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
-      feedback.textContent = template.replace('{name}', correct.name);
+      feedback.textContent = template.replace('{name}', displayNamePlain(correctBird, correctSex));
       feedback.className = 'feedback encouraging';
-      // Wrong in quiz = added to missed list, removed from mastered
-      state.missed.add(correct.name);
-      state.mastered.delete(correct.name);
+      state.missed.add(correctKey);
+      state.mastered.delete(correctKey);
     }
-    el.photo.alt = correct.name;
+    el.photo.alt = displayNamePlain(correctBird, correctSex);
 
     el.cardBody.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
     updateScoreboard();
@@ -1691,20 +1888,22 @@
         state.quizAnswered = true;
         state.attempts++;
         state.streak = 0;
-        const correctIdx = state.quizChoices.findIndex(c => c.name === state.current.name);
+        const correctSex = getDisplaySex(state.current, state.pos);
+        const correctKey = birdKey(state.current, correctSex);
+        const correctIdx = state.quizChoices.findIndex(c => birdKey(c.bird, c.sex) === correctKey);
         el.cardBody.querySelectorAll('.choice-btn').forEach((b, i) => {
           b.disabled = true;
           if (i === correctIdx) b.classList.add('reveal-correct');
         });
         const fb = $('feedback');
         if (fb) {
-          fb.textContent = `It was the ${state.current.name}`;
+          fb.textContent = `It was the ${displayNamePlain(state.current, correctSex)}`;
           fb.className = 'feedback encouraging';
         }
-        el.photo.alt = state.current.name;
+        el.photo.alt = displayNamePlain(state.current, correctSex);
         // Skip = treated as missed
-        state.missed.add(state.current.name);
-        state.mastered.delete(state.current.name);
+        state.missed.add(correctKey);
+        state.mastered.delete(correctKey);
         updateScoreboard();
         updateReviewUI();
         saveProfileData();
@@ -1773,8 +1972,10 @@
     state.mode = data.mode || 'browse';
     state.region = data.region || 'all';
     state.set = data.set || 'starter';
+    state.sexIdEnabled = !!data.sexIdEnabled;
     state.missed = data.missed;
     state.mastered = data.mastered;
+    state.cardSexes = data.cardSexes || {};
     state.score = data.score || 0;
     state.attempts = data.attempts || 0;
     state.streak = data.streak || 0;
@@ -1806,6 +2007,11 @@
       b.classList.toggle('active', b.dataset.set === state.set);
     });
     document.querySelectorAll('.quiz-only').forEach(e => e.hidden = (state.mode !== 'quiz'));
+    // Sex ID toggle
+    const sexCheckbox = $('sexIdToggle');
+    if (sexCheckbox) sexCheckbox.checked = state.sexIdEnabled;
+    const toggleRow = $('sexIdToggleRow');
+    if (toggleRow) toggleRow.classList.toggle('active', state.sexIdEnabled);
   }
 
   function clearMissed() {
@@ -1873,6 +2079,17 @@
   el.resetBtn.addEventListener('click', resetDeck);
   el.profileChip.addEventListener('click', renderProfilePicker);
   el.clearMissedBtn.addEventListener('click', clearMissed);
+
+  // Sex ID toggle
+  el.sexIdToggle.addEventListener('change', (e) => {
+    state.sexIdEnabled = e.target.checked;
+    el.sexIdToggleRow.classList.toggle('active', state.sexIdEnabled);
+    // Clear cached sex assignments and seen-state so cards re-prompt with the new setting
+    state.cardSexes = {};
+    state.seenPositions = new Set();
+    saveProfileData();
+    renderCard();
+  });
 
   // Click on card to reveal (browse mode, fresh card only)
   el.card.addEventListener('click', (e) => {
