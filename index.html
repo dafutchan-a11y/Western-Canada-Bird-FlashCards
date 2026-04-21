@@ -783,9 +783,15 @@
 
 <script>
   // ===== Storage / cache =====
-  const IMG_CACHE_KEY = 'birdsImageCache_v1';
+  // Bumped to v2 — v1 entries (from a previous broken version) are ignored
+  const IMG_CACHE_KEY = 'birdsImageCache_v2';
   let lsCache = {};
-  try { lsCache = JSON.parse(localStorage.getItem(IMG_CACHE_KEY) || '{}'); } catch (e) {}
+  try {
+    const raw = localStorage.getItem(IMG_CACHE_KEY);
+    if (raw) lsCache = JSON.parse(raw) || {};
+    // Clean out v1 if it exists, to free storage
+    try { localStorage.removeItem('birdsImageCache_v1'); } catch (e) {}
+  } catch (e) { lsCache = {}; }
   function persistCache() {
     try { localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(lsCache)); } catch (e) {}
   }
@@ -911,10 +917,9 @@
   // ===== Wikipedia image loader =====
   async function fetchBirdInfo(bird) {
     if (state.imgCache.has(bird.wiki)) return state.imgCache.get(bird.wiki);
-    if (lsCache[bird.wiki]) {
+    if (lsCache[bird.wiki] && typeof lsCache[bird.wiki] === 'object') {
       const cached = lsCache[bird.wiki];
-      const promise = Promise.resolve(cached);
-      state.imgCache.set(bird.wiki, promise);
+      state.imgCache.set(bird.wiki, Promise.resolve(cached));
       return cached;
     }
 
@@ -924,15 +929,15 @@
         const res = await fetch(url);
         if (!res.ok) throw new Error('Wikipedia fetch failed: ' + res.status);
         const data = await res.json();
-        const rawSrc = (data.thumbnail && data.thumbnail.source)
-                    || (data.originalimage && data.originalimage.source)
-                    || null;
-        const result = {
-          src: upgradeImageUrl(rawSrc, 720),
-          extract: data.extract || ''
-        };
-        lsCache[bird.wiki] = result;
-        persistCache();
+        // Match the previously-working strategy: prefer originalimage, fall back to thumbnail
+        const src = (data.originalimage && data.originalimage.source)
+                 || (data.thumbnail && data.thumbnail.source)
+                 || null;
+        const result = { src, extract: data.extract || '' };
+        if (src) {
+          lsCache[bird.wiki] = result;
+          persistCache();
+        }
         return result;
       } catch (e) {
         console.warn('Failed to load', bird.name, e);
