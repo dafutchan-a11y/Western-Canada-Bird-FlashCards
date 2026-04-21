@@ -495,7 +495,274 @@
     pointer-events: none;
   }
 
-  /* ---- Counter ---- */
+  /* ---- Profile chip in header ---- */
+  .profile-chip {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--paper);
+    border: 1px solid rgba(42, 36, 28, 0.15);
+    padding: 6px 12px 6px 6px;
+    border-radius: 100px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--forest);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 1px 3px rgba(42, 36, 28, 0.08);
+  }
+  .profile-chip:hover {
+    border-color: var(--forest);
+    background: var(--leaf);
+  }
+  .profile-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+  .profile-avatar.lily { background: #c75a8a; }
+  .profile-avatar.gabriel { background: #5a8ec7; }
+  .profile-avatar.grace { background: #a85a2b; }
+  .profile-avatar.dad { background: #2d4a2b; }
+
+  header { position: relative; }
+
+  /* ---- Profile picker overlay ---- */
+  .profile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(42, 36, 28, 0.88);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    backdrop-filter: blur(6px);
+  }
+  .profile-overlay.open { display: flex; }
+
+  .profile-picker {
+    background: var(--paper);
+    border-radius: 20px;
+    padding: 32px 28px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    animation: pop-in 0.3s ease;
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .profile-picker h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    color: var(--forest);
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .profile-picker .subtitle {
+    color: var(--ink-soft);
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .profile-card {
+    background: var(--cream);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 18px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+  }
+  .profile-card:hover {
+    border-color: var(--forest);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(42,36,28,0.12);
+  }
+  .profile-card-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .profile-card-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    color: var(--forest);
+    font-size: 1.1rem;
+  }
+  .profile-card-progress {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  /* ---- Judge buttons (Got It / Missed It) ---- */
+  .judge-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .judge-btn {
+    padding: 16px 12px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1;
+  }
+  .judge-btn .icon {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .judge-btn.got-it {
+    background: rgba(92, 122, 58, 0.12);
+    color: var(--success);
+    border-color: var(--success);
+  }
+  .judge-btn.got-it:hover {
+    background: var(--success);
+    color: var(--paper);
+    transform: translateY(-1px);
+  }
+  .judge-btn.missed-it {
+    background: rgba(168, 91, 58, 0.10);
+    color: var(--rust);
+    border-color: var(--rust);
+  }
+  .judge-btn.missed-it:hover {
+    background: var(--rust);
+    color: var(--paper);
+    transform: translateY(-1px);
+  }
+  .judge-feedback {
+    margin-top: 10px;
+    text-align: center;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    min-height: 22px;
+  }
+  .judge-feedback.got { color: var(--success); font-weight: 600; font-style: normal; }
+  .judge-feedback.missed { color: var(--rust); font-weight: 600; font-style: normal; }
+
+  /* ---- Review mode pill ---- */
+  .review-mode-banner {
+    background: linear-gradient(90deg, var(--ochre), var(--ochre-light));
+    color: var(--paper);
+    padding: 10px 16px;
+    border-radius: 100px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .review-mode-banner.active { display: flex; }
+
+  /* ---- Mastered/missed counters in completion ---- */
+  .completion-stat-num.missed { color: var(--rust); }
+  .completion-stat-num.mastered { color: var(--success); }
+
+  .completion-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .completion-actions .btn {
+    padding: 14px 20px;
+  }
+
+  /* ---- Stats inside controls (mastered/review counts) ---- */
+  .progress-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .progress-stats span strong {
+    color: var(--forest);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .progress-stats span.missed-stat strong { color: var(--rust); }
+  .progress-stats span.mastered-stat strong { color: var(--success); }
+  .progress-stats button {
+    background: transparent;
+    border: 1px solid var(--rust);
+    color: var(--rust);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .progress-stats button:hover {
+    background: var(--rust);
+    color: var(--paper);
+  }
+  .progress-stats button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
   .counter-bar {
     display: flex;
     align-items: center;
@@ -688,8 +955,22 @@
 </head>
 <body>
 
+<div class="profile-overlay" id="profileOverlay">
+  <div class="profile-picker">
+    <h2>Who's birding?</h2>
+    <div class="subtitle">Pick your profile to keep track of progress</div>
+    <div class="profile-grid" id="profileGrid">
+      <!-- Profile cards inserted here -->
+    </div>
+  </div>
+</div>
+
 <div class="app">
   <header>
+    <button type="button" class="profile-chip" id="profileChip" hidden>
+      <span class="profile-avatar" id="profileAvatar">?</span>
+      <span id="profileName">—</span>
+    </button>
     <div class="logo">
       <span class="logo-mark">✦</span>
       <span>Birds of the Route</span>
@@ -699,6 +980,10 @@
   </header>
 
   <section class="controls" aria-label="Game controls">
+    <div class="review-mode-banner" id="reviewBanner">
+      <span>📖 Review mode — birds you missed</span>
+    </div>
+
     <div>
       <span class="control-label">Mode</span>
       <div class="control-row">
@@ -726,10 +1011,17 @@
       <span class="control-label">Set</span>
       <div class="control-row">
         <div class="segmented" role="tablist" aria-label="Difficulty">
-          <button type="button" data-set="starter" class="active">Starter (~80 birds)</button>
-          <button type="button" data-set="all">Full (~160 birds)</button>
+          <button type="button" data-set="starter" class="active">Starter</button>
+          <button type="button" data-set="all">Full</button>
+          <button type="button" data-set="missed" id="missedSetBtn">Missed (0)</button>
         </div>
       </div>
+    </div>
+
+    <div class="progress-stats">
+      <span class="missed-stat">Missed: <strong id="missedCount">0</strong></span>
+      <span class="mastered-stat">Mastered: <strong id="masteredCount">0</strong></span>
+      <button type="button" id="clearMissedBtn" disabled title="Clear the missed list">Clear missed</button>
     </div>
 
     <div class="counter-bar">
@@ -783,25 +1075,90 @@
 
 <script>
   // ===== Storage / cache =====
-  // Bumped to v2 — v1 entries (from a previous broken version) are ignored
   const IMG_CACHE_KEY = 'birdsImageCache_v2';
   let lsCache = {};
   try {
     const raw = localStorage.getItem(IMG_CACHE_KEY);
     if (raw) lsCache = JSON.parse(raw) || {};
-    // Clean out v1 if it exists, to free storage
     try { localStorage.removeItem('birdsImageCache_v1'); } catch (e) {}
   } catch (e) { lsCache = {}; }
   function persistCache() {
     try { localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(lsCache)); } catch (e) {}
   }
 
+  // ===== Profile system =====
+  const PROFILES = [
+    { id: 'lily', name: 'Lily', initial: 'L' },
+    { id: 'gabriel', name: 'Gabriel', initial: 'G' },
+    { id: 'grace', name: 'Grace', initial: 'G' },
+    { id: 'dad', name: 'Dad', initial: 'D' }
+  ];
+  const ACTIVE_PROFILE_KEY = 'birdsActiveProfile_v1';
+  const PROFILE_DATA_KEY = id => `birdsProfile_v1_${id}`;
+
+  function getActiveProfileId() {
+    try { return localStorage.getItem(ACTIVE_PROFILE_KEY); } catch (e) { return null; }
+  }
+  function setActiveProfileId(id) {
+    try { localStorage.setItem(ACTIVE_PROFILE_KEY, id); } catch (e) {}
+  }
+  function loadProfileData(id) {
+    try {
+      const raw = localStorage.getItem(PROFILE_DATA_KEY(id));
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Hydrate the Set fields
+      parsed.seenPositions = new Set(parsed.seenPositions || []);
+      parsed.missed = new Set(parsed.missed || []);
+      parsed.mastered = new Set(parsed.mastered || []);
+      return parsed;
+    } catch (e) { return null; }
+  }
+  function saveProfileData() {
+    if (!state.profile) return;
+    try {
+      const data = {
+        deck: state.deck.map(b => b.name),  // store just names; rehydrate at load
+        pos: state.pos,
+        seenPositions: Array.from(state.seenPositions),
+        missed: Array.from(state.missed),
+        mastered: Array.from(state.mastered),
+        mode: state.mode,
+        region: state.region,
+        set: state.set,
+        score: state.score,
+        attempts: state.attempts,
+        streak: state.streak
+      };
+      localStorage.setItem(PROFILE_DATA_KEY(state.profile.id), JSON.stringify(data));
+    } catch (e) {}
+  }
+
+  function freshProfileState() {
+    return {
+      deck: [],
+      pos: 0,
+      seenPositions: new Set(),
+      missed: new Set(),
+      mastered: new Set(),
+      mode: 'browse',
+      region: 'all',
+      set: 'starter',
+      score: 0,
+      attempts: 0,
+      streak: 0
+    };
+  }
+
   // ===== State =====
   const state = {
     birds: [],
-    deck: [],          // current shuffled pool
-    pos: 0,            // current position in deck (0-indexed)
-    seenPositions: new Set(),  // positions we've rendered fresh at least once
+    profile: null,        // {id, name, initial} or null
+    deck: [],
+    pos: 0,
+    seenPositions: new Set(),
+    missed: new Set(),    // bird names the active profile got wrong (review list)
+    mastered: new Set(),  // bird names the active profile got right and never since missed
     current: null,
     mode: 'browse',
     region: 'all',
@@ -812,7 +1169,7 @@
     score: 0,
     attempts: 0,
     streak: 0,
-    imgCache: new Map(),  // wiki title -> Promise<{src, extract}>
+    imgCache: new Map(),
   };
 
   const REGION_NAMES = { P: 'Prairies', M: 'Rockies', I: 'Interior BC', C: 'Coast' };
@@ -855,6 +1212,16 @@
     attempts: $('attempts'),
     streak: $('streak'),
     quizStats: $('quizStats'),
+    profileChip: $('profileChip'),
+    profileAvatar: $('profileAvatar'),
+    profileName: $('profileName'),
+    profileOverlay: $('profileOverlay'),
+    profileGrid: $('profileGrid'),
+    reviewBanner: $('reviewBanner'),
+    missedSetBtn: $('missedSetBtn'),
+    missedCount: $('missedCount'),
+    masteredCount: $('masteredCount'),
+    clearMissedBtn: $('clearMissedBtn'),
   };
 
   // ===== Data loading =====
@@ -890,11 +1257,19 @@
   }
 
   function rebuildDeck() {
-    const pool = state.birds.filter(b => {
-      if (state.region !== 'all' && !b.regions.includes(state.region)) return false;
-      if (state.set === 'starter' && !b.starter) return false;
-      return true;
-    });
+    let pool;
+    if (state.set === 'missed') {
+      // Review mode: only birds the active profile has on their missed list
+      pool = state.birds.filter(b => state.missed.has(b.name));
+      // Region filter still applies (so kids can review just Coast birds, etc.)
+      if (state.region !== 'all') pool = pool.filter(b => b.regions.includes(state.region));
+    } else {
+      pool = state.birds.filter(b => {
+        if (state.region !== 'all' && !b.regions.includes(state.region)) return false;
+        if (state.set === 'starter' && !b.starter) return false;
+        return true;
+      });
+    }
     state.deck = shuffle(pool);
     state.pos = 0;
     state.seenPositions = new Set();
@@ -902,6 +1277,23 @@
     state.attempts = 0;
     state.streak = 0;
     updateScoreboard();
+    updateReviewUI();
+    saveProfileData();
+  }
+
+  function updateReviewUI() {
+    const missed = state.missed.size;
+    const mastered = state.mastered.size;
+    el.missedCount.textContent = missed;
+    el.masteredCount.textContent = mastered;
+    el.missedSetBtn.textContent = `Missed (${missed})`;
+    // Disable Missed set button if there are no missed birds
+    el.missedSetBtn.disabled = missed === 0;
+    el.missedSetBtn.style.opacity = missed === 0 ? '0.4' : '1';
+    el.missedSetBtn.style.cursor = missed === 0 ? 'not-allowed' : 'pointer';
+    el.clearMissedBtn.disabled = missed === 0;
+    // Show the review banner only when actively in missed mode
+    el.reviewBanner.classList.toggle('active', state.set === 'missed');
   }
 
   function updateCounter() {
@@ -984,21 +1376,66 @@
     el.photoWrap.style.display = 'none';
     el.regionBadges.innerHTML = '';
     el.dimorphicNote.hidden = true;
+    const inReviewMode = state.set === 'missed';
+    const missedCount = state.missed.size;
+    const sessionMissed = state.deck.filter(b => state.missed.has(b.name)).length;
+    const headline = inReviewMode
+      ? (missedCount === 0 ? "All clear! Review list empty." : `Reviewed all ${state.deck.length}!`)
+      : `You've seen all ${state.deck.length} birds!`;
+    const subtext = inReviewMode
+      ? (missedCount === 0 ? 'Beautiful work — every bird is in the mastered pile.' : 'Want to keep practicing or shuffle the full deck?')
+      : 'That\'s the whole deck. What next?';
+    const showReviewBtn = !inReviewMode && missedCount > 0;
+    const showFullDeckBtn = inReviewMode;
     el.cardBody.innerHTML = `
       <div class="completion">
-        <div class="completion-emoji">🎉</div>
-        <h2>You've seen all ${state.deck.length} birds!</h2>
-        <p>That's the whole deck. Want to shuffle and go again?</p>
+        <div class="completion-emoji">${inReviewMode && missedCount === 0 ? '🌟' : '🎉'}</div>
+        <h2>${headline}</h2>
+        <p>${subtext}</p>
         ${state.mode === 'quiz' && state.attempts > 0 ? `
           <div class="completion-stats">
             <div class="completion-stat">
               <div class="completion-stat-num">${state.score}/${state.attempts}</div>
               <div class="completion-stat-label">Score</div>
             </div>
+            <div class="completion-stat">
+              <div class="completion-stat-num mastered">${state.mastered.size}</div>
+              <div class="completion-stat-label">Mastered</div>
+            </div>
+            ${missedCount > 0 ? `
+              <div class="completion-stat">
+                <div class="completion-stat-num missed">${missedCount}</div>
+                <div class="completion-stat-label">To review</div>
+              </div>
+            ` : ''}
           </div>
-        ` : ''}
+        ` : (state.mode === 'browse' ? `
+          <div class="completion-stats">
+            <div class="completion-stat">
+              <div class="completion-stat-num mastered">${state.mastered.size}</div>
+              <div class="completion-stat-label">Mastered</div>
+            </div>
+            ${missedCount > 0 ? `
+              <div class="completion-stat">
+                <div class="completion-stat-num missed">${missedCount}</div>
+                <div class="completion-stat-label">To review</div>
+              </div>
+            ` : ''}
+          </div>
+        ` : '')}
+        <div class="completion-actions">
+          <button type="button" class="btn btn-primary" id="completeShuffleBtn">↻ Shuffle &amp; start over</button>
+          ${showReviewBtn ? `<button type="button" class="btn btn-secondary" id="completeReviewBtn">📖 Practice missed (${missedCount})</button>` : ''}
+          ${showFullDeckBtn ? `<button type="button" class="btn btn-secondary" id="completeFullDeckBtn">Back to full deck</button>` : ''}
+        </div>
       </div>
     `;
+    const shuffleBtn = $('completeShuffleBtn');
+    if (shuffleBtn) shuffleBtn.addEventListener('click', resetDeck);
+    const reviewBtn = $('completeReviewBtn');
+    if (reviewBtn) reviewBtn.addEventListener('click', () => setSet('missed'));
+    const fullBtn = $('completeFullDeckBtn');
+    if (fullBtn) fullBtn.addEventListener('click', () => setSet('starter'));
     el.skipBtn.hidden = true;
     el.nextBtn.textContent = '↻ Shuffle &amp; start over';
     el.backBtn.disabled = false;
@@ -1047,7 +1484,8 @@
 
     // Body content depends on mode + alreadySeen
     if (alreadySeen) {
-      renderRevealed(bird);
+      // No judge buttons on review (they already judged this card)
+      renderRevealed(bird, { showJudge: false });
     } else if (state.mode === 'browse') {
       renderBrowse(bird);
     } else {
@@ -1100,10 +1538,18 @@
     el.skipBtn.textContent = 'Reveal';
   }
 
-  function renderRevealed(bird) {
+  function renderRevealed(bird, opts = {}) {
     state.revealed = true;
     state.quizAnswered = true;
+    const showJudge = opts.showJudge !== false;
     const regionList = bird.regions.map(r => REGION_NAMES[r]).join(' · ');
+    const judgeHTML = showJudge ? `
+      <div class="judge-row">
+        <button type="button" class="judge-btn got-it" id="gotItBtn"><span class="icon">✓</span> Got it</button>
+        <button type="button" class="judge-btn missed-it" id="missedItBtn"><span class="icon">✗</span> Missed it</button>
+      </div>
+      <div class="judge-feedback" id="judgeFeedback">&nbsp;</div>
+    ` : '';
     el.cardBody.innerHTML = `
       <div class="bird-name">${bird.name}</div>
       <div class="bird-sci">${bird.sci}</div>
@@ -1111,12 +1557,43 @@
         <span class="meta-chip">${regionList}</span>
         ${bird.dimorphic ? '<span class="meta-chip">Male &amp; female differ</span>' : ''}
       </div>
+      ${judgeHTML}
     `;
+    if (showJudge) {
+      $('gotItBtn').addEventListener('click', () => judgeBird('got'));
+      $('missedItBtn').addEventListener('click', () => judgeBird('missed'));
+    }
     el.photo.alt = bird.name;
     el.skipBtn.hidden = true;
   }
-  // Alias kept for the click-to-flip handler in browse mode
   function renderReveal(bird) { renderRevealed(bird); }
+
+  // Browse-mode judging: log result, advance after a brief beat for feedback
+  function judgeBird(result) {
+    if (!state.current) return;
+    const bird = state.current;
+    if (result === 'got') {
+      // Got it: remove from missed list, add to mastered
+      state.missed.delete(bird.name);
+      state.mastered.add(bird.name);
+      const fb = $('judgeFeedback');
+      if (fb) { fb.textContent = '✓ Got it'; fb.className = 'judge-feedback got'; }
+    } else {
+      // Missed: add to missed, remove from mastered
+      state.missed.add(bird.name);
+      state.mastered.delete(bird.name);
+      const fb = $('judgeFeedback');
+      if (fb) { fb.textContent = '✗ Added to review list'; fb.className = 'judge-feedback missed'; }
+    }
+    // Disable the judge buttons so they don't double-tap
+    const got = $('gotItBtn'), missed = $('missedItBtn');
+    if (got) got.disabled = true;
+    if (missed) missed.disabled = true;
+    updateReviewUI();
+    saveProfileData();
+    // Advance after a short pause so they see the confirmation
+    setTimeout(() => nextBird(), 450);
+  }
 
   function renderQuiz(bird) {
     state.quizChoices = pickQuizChoices(bird);
@@ -1149,21 +1626,27 @@
       state.streak++;
       feedback.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)];
       feedback.className = 'feedback correct';
+      // Right in quiz = mastered, removes from missed list
+      state.missed.delete(correct.name);
+      state.mastered.add(correct.name);
     } else {
       btnEl.classList.add('wrong');
       state.streak = 0;
-      // Highlight the correct answer
       const correctIdx = state.quizChoices.findIndex(c => c.name === correct.name);
       el.cardBody.querySelectorAll('.choice-btn')[correctIdx].classList.add('reveal-correct');
       const template = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
       feedback.textContent = template.replace('{name}', correct.name);
       feedback.className = 'feedback encouraging';
+      // Wrong in quiz = added to missed list, removed from mastered
+      state.missed.add(correct.name);
+      state.mastered.delete(correct.name);
     }
     el.photo.alt = correct.name;
 
-    // Disable all choice buttons
     el.cardBody.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
     updateScoreboard();
+    updateReviewUI();
+    saveProfileData();
   }
 
   function updateScoreboard() {
@@ -1174,19 +1657,21 @@
 
   // ===== Navigation =====
   function nextBird() {
-    // From the completion screen, "next" means reshuffle and start over
     if (state.pos >= state.deck.length) {
+      // From completion: default action is reshuffle
       resetDeck();
       return;
     }
     state.pos++;
     renderCard();
+    saveProfileData();
   }
 
   function prevBird() {
     if (state.pos <= 0) return;
     state.pos--;
     renderCard();
+    saveProfileData();
   }
 
   function resetDeck() {
@@ -1202,7 +1687,6 @@
         nextBird();
       }
     } else {
-      // Quiz: skip = mark wrong, reveal answer (no advancing)
       if (!state.quizAnswered && state.current) {
         state.quizAnswered = true;
         state.attempts++;
@@ -1218,13 +1702,127 @@
           fb.className = 'feedback encouraging';
         }
         el.photo.alt = state.current.name;
+        // Skip = treated as missed
+        state.missed.add(state.current.name);
+        state.mastered.delete(state.current.name);
         updateScoreboard();
+        updateReviewUI();
+        saveProfileData();
       } else {
         nextBird();
       }
     }
   }
 
+  // ===== Profile picker =====
+  function getProfileSummary(id) {
+    const data = loadProfileData(id);
+    if (!data) return null;
+    return {
+      mastered: (data.mastered || []).length,
+      missed: (data.missed || []).length,
+      pos: data.pos || 0,
+      deckLen: (data.deck || []).length
+    };
+  }
+
+  function renderProfilePicker() {
+    el.profileGrid.innerHTML = '';
+    PROFILES.forEach(p => {
+      const summary = getProfileSummary(p.id);
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'profile-card';
+      card.innerHTML = `
+        <div class="profile-card-avatar ${p.id}">${p.initial}</div>
+        <div class="profile-card-name">${p.name}</div>
+        <div class="profile-card-progress">
+          ${summary && summary.mastered > 0 ? `${summary.mastered} mastered` : 'New birder'}
+        </div>
+      `;
+      card.addEventListener('click', () => activateProfile(p));
+      el.profileGrid.appendChild(card);
+    });
+    el.profileOverlay.classList.add('open');
+  }
+
+  function activateProfile(profile) {
+    state.profile = profile;
+    setActiveProfileId(profile.id);
+    el.profileOverlay.classList.remove('open');
+    el.profileChip.hidden = false;
+    el.profileAvatar.textContent = profile.initial;
+    el.profileAvatar.className = `profile-avatar ${profile.id}`;
+    el.profileName.textContent = profile.name;
+    loadStateForProfile(profile);
+    renderCard();
+  }
+
+  function loadStateForProfile(profile) {
+    const data = loadProfileData(profile.id);
+    if (!data) {
+      // Fresh profile
+      const fresh = freshProfileState();
+      Object.assign(state, fresh);
+      // Set UI to defaults
+      syncControlsToState();
+      rebuildDeck();
+      return;
+    }
+    // Restore filters
+    state.mode = data.mode || 'browse';
+    state.region = data.region || 'all';
+    state.set = data.set || 'starter';
+    state.missed = data.missed;
+    state.mastered = data.mastered;
+    state.score = data.score || 0;
+    state.attempts = data.attempts || 0;
+    state.streak = data.streak || 0;
+    syncControlsToState();
+    // Try to restore the deck (by name lookup in current bird list)
+    const byName = new Map(state.birds.map(b => [b.name, b]));
+    const restoredDeck = (data.deck || []).map(name => byName.get(name)).filter(Boolean);
+    if (restoredDeck.length === 0 || (state.set === 'missed' && state.missed.size === 0)) {
+      // Deck doesn't make sense any more (data update or empty review list) — rebuild
+      rebuildDeck();
+    } else {
+      state.deck = restoredDeck;
+      state.pos = Math.min(data.pos || 0, restoredDeck.length);
+      state.seenPositions = data.seenPositions || new Set();
+      updateScoreboard();
+      updateReviewUI();
+      updateCounter();
+    }
+  }
+
+  function syncControlsToState() {
+    document.querySelectorAll('[data-mode]').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === state.mode);
+    });
+    document.querySelectorAll('[data-region]').forEach(b => {
+      b.classList.toggle('active', b.dataset.region === state.region);
+    });
+    document.querySelectorAll('[data-set]').forEach(b => {
+      b.classList.toggle('active', b.dataset.set === state.set);
+    });
+    document.querySelectorAll('.quiz-only').forEach(e => e.hidden = (state.mode !== 'quiz'));
+  }
+
+  function clearMissed() {
+    if (!state.missed.size) return;
+    if (!confirm(`Clear all ${state.missed.size} birds from ${state.profile.name}'s review list?`)) return;
+    state.missed = new Set();
+    // If they were in missed mode, drop back to starter
+    if (state.set === 'missed') {
+      state.set = 'starter';
+      syncControlsToState();
+      rebuildDeck();
+      renderCard();
+    } else {
+      updateReviewUI();
+      saveProfileData();
+    }
+  }
   // ===== Controls =====
   function setMode(mode) {
     if (mode === state.mode) return;
@@ -1249,6 +1847,7 @@
 
   function setSet(s) {
     if (s === state.set) return;
+    if (s === 'missed' && state.missed.size === 0) return;  // can't enter missed mode with empty list
     state.set = s;
     document.querySelectorAll('[data-set]').forEach(b => {
       b.classList.toggle('active', b.dataset.set === s);
@@ -1272,19 +1871,22 @@
   el.backBtn.addEventListener('click', prevBird);
   el.skipBtn.addEventListener('click', revealOrSkip);
   el.resetBtn.addEventListener('click', resetDeck);
+  el.profileChip.addEventListener('click', renderProfilePicker);
+  el.clearMissedBtn.addEventListener('click', clearMissed);
 
   // Click on card to reveal (browse mode, fresh card only)
   el.card.addEventListener('click', (e) => {
     if (state.mode !== 'browse') return;
     if (e.target.closest('button')) return;
     if (!state.current) return;
-    // If we've already seen this position before this rotation, the card is already revealed
     if (!state.revealed) renderReveal(state.current);
   });
 
   // Keyboard
   document.addEventListener('keydown', (e) => {
     if (e.target.matches('input, textarea')) return;
+    // Don't capture keys while profile picker is open
+    if (el.profileOverlay.classList.contains('open')) return;
     if (e.key === ' ' || e.code === 'Space') {
       e.preventDefault();
       if (state.mode === 'browse' && state.current && !state.revealed) {
@@ -1298,6 +1900,13 @@
     } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
       e.preventDefault();
       prevBird();
+    } else if (state.mode === 'browse' && state.revealed && state.current) {
+      // Quick judge keys for browse mode (only when revealed and not yet judged)
+      if (e.key.toLowerCase() === 'y' || e.key.toLowerCase() === 'g') {
+        if ($('gotItBtn') && !$('gotItBtn').disabled) judgeBird('got');
+      } else if (e.key.toLowerCase() === 'n' || e.key.toLowerCase() === 'm') {
+        if ($('missedItBtn') && !$('missedItBtn').disabled) judgeBird('missed');
+      }
     } else if (state.mode === 'quiz' && !state.quizAnswered && /^[1-4]$/.test(e.key)) {
       const idx = parseInt(e.key, 10) - 1;
       const btn = el.cardBody.querySelectorAll('.choice-btn')[idx];
@@ -1313,8 +1922,15 @@
   // ===== Boot =====
   (async function init() {
     await loadBirds();
-    rebuildDeck();
-    renderCard();
+    if (!state.birds.length) return;  // loadBirds already showed an error
+
+    const activeId = getActiveProfileId();
+    const profile = activeId ? PROFILES.find(p => p.id === activeId) : null;
+    if (profile) {
+      activateProfile(profile);
+    } else {
+      renderProfilePicker();
+    }
   })();
 </script>
 
