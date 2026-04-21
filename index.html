@@ -495,10 +495,190 @@
     pointer-events: none;
   }
 
+  /* ---- Counter ---- */
+  .counter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(42, 36, 28, 0.15);
+  }
+
+  .counter-main {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: 'Fraunces', Georgia, serif;
+  }
+
+  .counter-num {
+    font-weight: 700;
+    color: var(--forest);
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .counter-sep {
+    color: var(--ink-soft);
+    font-size: 1rem;
+  }
+
+  .counter-total {
+    color: var(--ink-soft);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .counter-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 700;
+    margin-left: 8px;
+  }
+
+  .counter-quiz {
+    display: flex;
+    gap: 14px;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .counter-quiz strong {
+    color: var(--forest);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+  }
+  .counter-quiz .streak strong { color: var(--ochre); }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid rgba(42, 36, 28, 0.2);
+    color: var(--ink-soft);
+    padding: 5px 11px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .reset-btn:hover {
+    border-color: var(--forest);
+    color: var(--forest);
+    background: var(--leaf);
+  }
+
+  .progress-meter {
+    height: 3px;
+    background: var(--leaf);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .progress-meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--forest), var(--moss));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* ---- Back button ---- */
+  .btn-back {
+    flex: 0 0 auto;
+    padding: 14px 16px;
+    background: var(--paper);
+    color: var(--forest);
+    border: 2px solid var(--leaf);
+    border-radius: 12px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-back:hover:not(:disabled) {
+    border-color: var(--forest);
+    background: var(--leaf);
+  }
+  .btn-back:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* ---- Completion screen ---- */
+  .completion {
+    text-align: center;
+    padding: 48px 24px 40px;
+  }
+  .completion-emoji {
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 16px;
+    animation: gentle-float 3s ease-in-out infinite;
+  }
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-6px) rotate(3deg); }
+  }
+  .completion h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    color: var(--forest);
+    font-size: 1.8rem;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .completion p {
+    color: var(--ink-soft);
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+  .completion-stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .completion-stat {
+    text-align: center;
+  }
+  .completion-stat-num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--ochre);
+    line-height: 1;
+  }
+  .completion-stat-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .completion-photo-wrap {
+    display: none !important;
+  }
+
   @media (max-width: 480px) {
     .choices { grid-template-columns: 1fr; }
     .control-row { flex-direction: column; gap: 10px; }
     .corner-feather { display: none; }
+    .counter-bar { flex-wrap: wrap; }
+    .btn-back { padding: 14px 12px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -552,11 +732,20 @@
       </div>
     </div>
 
-    <div class="stats">
-      <div class="stats-item"><strong id="poolCount">—</strong> in pool</div>
-      <div class="stats-item quiz-only" id="scoreWrap" hidden>Score: <strong id="score">0</strong> / <strong id="attempts">0</strong></div>
-      <div class="stats-item streak quiz-only" id="streakWrap" hidden>Streak: <strong id="streak">0</strong> 🔥</div>
+    <div class="counter-bar">
+      <div class="counter-main">
+        <span class="counter-num" id="counterNum">—</span>
+        <span class="counter-sep">/</span>
+        <span class="counter-total" id="counterTotal">—</span>
+        <span class="counter-label">seen</span>
+      </div>
+      <div class="counter-quiz quiz-only" id="quizStats" hidden>
+        <span>Score: <strong id="score">0</strong>/<strong id="attempts">0</strong></span>
+        <span class="streak">Streak: <strong id="streak">0</strong> 🔥</span>
+      </div>
+      <button type="button" class="reset-btn" id="resetBtn" title="Reshuffle the deck">↻ Reset</button>
     </div>
+    <div class="progress-meter"><div class="progress-meter-fill" id="progressFill"></div></div>
   </section>
 
   <section class="card-stage">
@@ -581,6 +770,7 @@
   </section>
 
   <div class="actions">
+    <button type="button" class="btn-back" id="backBtn" disabled aria-label="Previous bird">← Back</button>
     <button type="button" class="btn btn-secondary" id="skipBtn">Skip</button>
     <button type="button" class="btn btn-primary" id="nextBtn">Next bird →</button>
   </div>
@@ -592,10 +782,20 @@
 </div>
 
 <script>
+  // ===== Storage / cache =====
+  const IMG_CACHE_KEY = 'birdsImageCache_v1';
+  let lsCache = {};
+  try { lsCache = JSON.parse(localStorage.getItem(IMG_CACHE_KEY) || '{}'); } catch (e) {}
+  function persistCache() {
+    try { localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(lsCache)); } catch (e) {}
+  }
+
   // ===== State =====
   const state = {
     birds: [],
-    pool: [],
+    deck: [],          // current shuffled pool
+    pos: 0,            // current position in deck (0-indexed)
+    seenPositions: new Set(),  // positions we've rendered fresh at least once
     current: null,
     mode: 'browse',
     region: 'all',
@@ -606,8 +806,7 @@
     score: 0,
     attempts: 0,
     streak: 0,
-    recentIds: [],
-    imgCache: new Map(), // wiki title -> Promise<{src, extract}>
+    imgCache: new Map(),  // wiki title -> Promise<{src, extract}>
   };
 
   const REGION_NAMES = { P: 'Prairies', M: 'Rockies', I: 'Interior BC', C: 'Coast' };
@@ -632,20 +831,24 @@
   const $ = id => document.getElementById(id);
   const el = {
     card: $('card'),
+    photoWrap: $('photoWrap'),
     photo: $('photo'),
     photoEmpty: $('photoEmpty'),
     skeleton: $('skeleton'),
     regionBadges: $('regionBadges'),
     dimorphicNote: $('dimorphicNote'),
     cardBody: $('cardBody'),
+    backBtn: $('backBtn'),
     skipBtn: $('skipBtn'),
     nextBtn: $('nextBtn'),
-    poolCount: $('poolCount'),
+    resetBtn: $('resetBtn'),
+    counterNum: $('counterNum'),
+    counterTotal: $('counterTotal'),
+    progressFill: $('progressFill'),
     score: $('score'),
     attempts: $('attempts'),
     streak: $('streak'),
-    scoreWrap: $('scoreWrap'),
-    streakWrap: $('streakWrap'),
+    quizStats: $('quizStats'),
   };
 
   // ===== Data loading =====
@@ -660,18 +863,60 @@
     }
   }
 
-  function rebuildPool() {
-    state.pool = state.birds.filter(b => {
+  // ===== Helpers =====
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Wikipedia thumbnail URLs look like .../thumb/a/aa/Filename.jpg/320px-Filename.jpg
+  // We can request a different size by changing the NNNpx- prefix in the last path segment.
+  function upgradeImageUrl(url, targetWidth = 720) {
+    if (!url) return url;
+    return url.replace(/\/(\d+)px-([^/]+)$/, (m, w, name) => {
+      // Keep the larger of the two so we don't upscale a small original
+      return `/${Math.max(parseInt(w, 10), targetWidth)}px-${name}`;
+    });
+  }
+
+  function rebuildDeck() {
+    const pool = state.birds.filter(b => {
       if (state.region !== 'all' && !b.regions.includes(state.region)) return false;
       if (state.set === 'starter' && !b.starter) return false;
       return true;
     });
-    el.poolCount.textContent = state.pool.length;
+    state.deck = shuffle(pool);
+    state.pos = 0;
+    state.seenPositions = new Set();
+    state.score = 0;
+    state.attempts = 0;
+    state.streak = 0;
+    updateScoreboard();
+  }
+
+  function updateCounter() {
+    const total = state.deck.length;
+    const shown = Math.min(state.pos + 1, total);
+    el.counterNum.textContent = total ? shown : 0;
+    el.counterTotal.textContent = total;
+    const pct = total ? (shown / total) * 100 : 0;
+    el.progressFill.style.width = pct + '%';
+    el.backBtn.disabled = state.pos === 0;
   }
 
   // ===== Wikipedia image loader =====
   async function fetchBirdInfo(bird) {
     if (state.imgCache.has(bird.wiki)) return state.imgCache.get(bird.wiki);
+    if (lsCache[bird.wiki]) {
+      const cached = lsCache[bird.wiki];
+      const promise = Promise.resolve(cached);
+      state.imgCache.set(bird.wiki, promise);
+      return cached;
+    }
 
     const promise = (async () => {
       const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bird.wiki)}`;
@@ -679,12 +924,16 @@
         const res = await fetch(url);
         if (!res.ok) throw new Error('Wikipedia fetch failed: ' + res.status);
         const data = await res.json();
-        // Prefer the original/full-res image; thumbnail is the fallback
-        const src = (data.originalimage && data.originalimage.source)
-                 || (data.thumbnail && data.thumbnail.source)
-                 || null;
-        // For the kid-facing card we don't show extracts, but we keep them around
-        return { src, extract: data.extract || '' };
+        const rawSrc = (data.thumbnail && data.thumbnail.source)
+                    || (data.originalimage && data.originalimage.source)
+                    || null;
+        const result = {
+          src: upgradeImageUrl(rawSrc, 720),
+          extract: data.extract || ''
+        };
+        lsCache[bird.wiki] = result;
+        persistCache();
+        return result;
       } catch (e) {
         console.warn('Failed to load', bird.name, e);
         return { src: null, extract: '' };
@@ -695,42 +944,77 @@
     return promise;
   }
 
-  // ===== Bird selection =====
-  function pickBird() {
-    if (!state.pool.length) return null;
-    // Avoid repeating the last ~30% of pool in short rotation
-    const avoidCount = Math.min(Math.floor(state.pool.length * 0.3), 12);
-    const avoid = new Set(state.recentIds.slice(-avoidCount));
-    const available = state.pool.filter(b => !avoid.has(b.name));
-    const source = available.length ? available : state.pool;
-    const choice = source[Math.floor(Math.random() * source.length)];
-    state.recentIds.push(choice.name);
-    if (state.recentIds.length > 60) state.recentIds.shift();
-    return choice;
+  // Preload next N birds' images in the background
+  function preloadAhead(count = 2) {
+    if (!state.deck.length) return;
+    for (let i = 1; i <= count; i++) {
+      const idx = state.pos + i;
+      if (idx >= state.deck.length) break;
+      const bird = state.deck[idx];
+      fetchBirdInfo(bird).then(info => {
+        if (info && info.src) {
+          const img = new Image();
+          img.src = info.src;
+        }
+      }).catch(() => {});
+    }
   }
 
   function pickQuizChoices(correct) {
     const choices = [correct];
     const pool = state.birds.filter(b => b.name !== correct.name);
-    // Mix difficulty: prefer same region first
     const sameRegion = pool.filter(b => b.regions.some(r => correct.regions.includes(r)));
-    const source = sameRegion.length >= 3 ? sameRegion : pool;
+    const source = sameRegion.length >= 3 ? sameRegion.slice() : pool.slice();
     while (choices.length < 4 && source.length > 0) {
       const idx = Math.floor(Math.random() * source.length);
       const pick = source.splice(idx, 1)[0];
       if (!choices.some(c => c.name === pick.name)) choices.push(pick);
     }
-    // Shuffle
-    for (let i = choices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [choices[i], choices[j]] = [choices[j], choices[i]];
-    }
-    return choices;
+    return shuffle(choices);
   }
 
   // ===== Rendering =====
+  function renderCompletion() {
+    state.current = null;
+    el.photoWrap.style.display = 'none';
+    el.regionBadges.innerHTML = '';
+    el.dimorphicNote.hidden = true;
+    el.cardBody.innerHTML = `
+      <div class="completion">
+        <div class="completion-emoji">🎉</div>
+        <h2>You've seen all ${state.deck.length} birds!</h2>
+        <p>That's the whole deck. Want to shuffle and go again?</p>
+        ${state.mode === 'quiz' && state.attempts > 0 ? `
+          <div class="completion-stats">
+            <div class="completion-stat">
+              <div class="completion-stat-num">${state.score}/${state.attempts}</div>
+              <div class="completion-stat-label">Score</div>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+    el.skipBtn.hidden = true;
+    el.nextBtn.textContent = '↻ Shuffle &amp; start over';
+    el.backBtn.disabled = false;
+    updateCounter();
+  }
+
   async function renderCard() {
-    const bird = state.current;
+    el.photoWrap.style.display = '';
+
+    if (state.pos >= state.deck.length) {
+      renderCompletion();
+      return;
+    }
+
+    const bird = state.deck[state.pos];
+    state.current = bird;
+
+    // "Already seen" = this position has been rendered fresh at least once before
+    const alreadySeen = state.seenPositions.has(state.pos);
+    state.seenPositions.add(state.pos);
+
     if (!bird) {
       el.cardBody.innerHTML = '<div class="empty-state"><h3>No birds in pool</h3><p>Try a different region or switch to the full set.</p></div>';
       el.photo.hidden = true;
@@ -738,6 +1022,8 @@
       el.photoEmpty.hidden = true;
       el.regionBadges.innerHTML = '';
       el.dimorphicNote.hidden = true;
+      el.skipBtn.hidden = true;
+      updateCounter();
       return;
     }
 
@@ -748,39 +1034,43 @@
     el.photoEmpty.hidden = true;
     el.skeleton.classList.remove('hidden');
 
-    // Region badges (always shown, helps learning)
+    // Region badges
     el.regionBadges.innerHTML = bird.regions
       .map(r => `<span class="region-badge" title="${REGION_NAMES[r]}">${REGION_NAMES[r]}</span>`)
       .join('');
-
     el.dimorphicNote.hidden = !bird.dimorphic;
 
-    // Render the body according to mode
-    if (state.mode === 'browse') {
+    // Body content depends on mode + alreadySeen
+    if (alreadySeen) {
+      renderRevealed(bird);
+    } else if (state.mode === 'browse') {
       renderBrowse(bird);
     } else {
       renderQuiz(bird);
     }
+    el.nextBtn.textContent = state.mode === 'browse' ? 'Next bird →' : 'Next →';
+    updateCounter();
 
     // Load photo
     const info = await fetchBirdInfo(bird);
-    if (state.current !== bird) return; // user moved on
+    if (state.current !== bird) return;
     if (info.src) {
-      // Apply per-bird crop overrides if present
       const crop = bird.crop || 'cover';
       const position = bird.position || 'center center';
       el.photo.style.objectFit = crop;
       el.photo.style.objectPosition = position;
-      // If contained (letterboxed), give it a dark backdrop so the frame looks intentional
       el.photo.parentElement.style.background = (crop === 'contain')
         ? '#2a241c'
         : 'linear-gradient(135deg, var(--leaf), var(--cream-warm))';
 
       el.photo.src = info.src;
-      el.photo.alt = (state.mode === 'browse' && !state.revealed) ? 'A bird photo — reveal to see its name' : bird.name;
+      el.photo.alt = (state.mode === 'browse' && !state.revealed && !alreadySeen)
+        ? 'A bird photo — reveal to see its name'
+        : bird.name;
       el.photo.onload = () => {
         el.photo.classList.remove('loading');
         el.skeleton.classList.add('hidden');
+        preloadAhead(2);
       };
       el.photo.onerror = () => {
         el.skeleton.classList.add('hidden');
@@ -797,17 +1087,17 @@
   function renderBrowse(bird) {
     state.revealed = false;
     el.cardBody.innerHTML = `
-      <div class="reveal-prompt" id="revealPrompt">
+      <div class="reveal-prompt">
         Tap the card (or press <span class="hint-key">Space</span>) to reveal
       </div>
     `;
     el.skipBtn.hidden = false;
     el.skipBtn.textContent = 'Reveal';
-    el.nextBtn.textContent = 'Next bird →';
   }
 
-  function renderReveal(bird) {
+  function renderRevealed(bird) {
     state.revealed = true;
+    state.quizAnswered = true;
     const regionList = bird.regions.map(r => REGION_NAMES[r]).join(' · ');
     el.cardBody.innerHTML = `
       <div class="bird-name">${bird.name}</div>
@@ -820,6 +1110,8 @@
     el.photo.alt = bird.name;
     el.skipBtn.hidden = true;
   }
+  // Alias kept for the click-to-flip handler in browse mode
+  function renderReveal(bird) { renderRevealed(bird); }
 
   function renderQuiz(bird) {
     state.quizChoices = pickQuizChoices(bird);
@@ -836,7 +1128,6 @@
     });
     el.skipBtn.hidden = false;
     el.skipBtn.textContent = 'Skip';
-    el.nextBtn.textContent = 'Next →';
   }
 
   function handleQuizChoice(idx, btnEl) {
@@ -876,9 +1167,25 @@
     el.streak.textContent = state.streak;
   }
 
-  // ===== Actions =====
+  // ===== Navigation =====
   function nextBird() {
-    state.current = pickBird();
+    // From the completion screen, "next" means reshuffle and start over
+    if (state.pos >= state.deck.length) {
+      resetDeck();
+      return;
+    }
+    state.pos++;
+    renderCard();
+  }
+
+  function prevBird() {
+    if (state.pos <= 0) return;
+    state.pos--;
+    renderCard();
+  }
+
+  function resetDeck() {
+    rebuildDeck();
     renderCard();
   }
 
@@ -890,8 +1197,8 @@
         nextBird();
       }
     } else {
-      // Quiz: skip counts as incorrect with no streak loss message
-      if (!state.quizAnswered) {
+      // Quiz: skip = mark wrong, reveal answer (no advancing)
+      if (!state.quizAnswered && state.current) {
         state.quizAnswered = true;
         state.attempts++;
         state.streak = 0;
@@ -900,8 +1207,11 @@
           b.disabled = true;
           if (i === correctIdx) b.classList.add('reveal-correct');
         });
-        $('feedback').textContent = `It was the ${state.current.name}`;
-        $('feedback').className = 'feedback encouraging';
+        const fb = $('feedback');
+        if (fb) {
+          fb.textContent = `It was the ${state.current.name}`;
+          fb.className = 'feedback encouraging';
+        }
         el.photo.alt = state.current.name;
         updateScoreboard();
       } else {
@@ -912,35 +1222,34 @@
 
   // ===== Controls =====
   function setMode(mode) {
+    if (mode === state.mode) return;
     state.mode = mode;
     document.querySelectorAll('[data-mode]').forEach(b => {
       b.classList.toggle('active', b.dataset.mode === mode);
     });
-    const quizOnly = document.querySelectorAll('.quiz-only');
-    quizOnly.forEach(e => e.hidden = (mode !== 'quiz'));
-    if (mode === 'quiz') {
-      state.score = 0; state.attempts = 0; state.streak = 0;
-      updateScoreboard();
-    }
-    nextBird();
+    document.querySelectorAll('.quiz-only').forEach(e => e.hidden = (mode !== 'quiz'));
+    rebuildDeck();
+    renderCard();
   }
 
   function setRegion(region) {
+    if (region === state.region) return;
     state.region = region;
     document.querySelectorAll('[data-region]').forEach(b => {
       b.classList.toggle('active', b.dataset.region === region);
     });
-    rebuildPool();
-    nextBird();
+    rebuildDeck();
+    renderCard();
   }
 
   function setSet(s) {
+    if (s === state.set) return;
     state.set = s;
     document.querySelectorAll('[data-set]').forEach(b => {
       b.classList.toggle('active', b.dataset.set === s);
     });
-    rebuildPool();
-    nextBird();
+    rebuildDeck();
+    renderCard();
   }
 
   // ===== Event wiring =====
@@ -955,14 +1264,17 @@
   });
 
   el.nextBtn.addEventListener('click', nextBird);
+  el.backBtn.addEventListener('click', prevBird);
   el.skipBtn.addEventListener('click', revealOrSkip);
+  el.resetBtn.addEventListener('click', resetDeck);
 
-  // Click on card to reveal (browse mode)
+  // Click on card to reveal (browse mode, fresh card only)
   el.card.addEventListener('click', (e) => {
     if (state.mode !== 'browse') return;
-    // Only respond to card clicks, not button clicks
     if (e.target.closest('button')) return;
-    if (!state.revealed && state.current) renderReveal(state.current);
+    if (!state.current) return;
+    // If we've already seen this position before this rotation, the card is already revealed
+    if (!state.revealed) renderReveal(state.current);
   });
 
   // Keyboard
@@ -976,7 +1288,11 @@
         nextBird();
       }
     } else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+      e.preventDefault();
       nextBird();
+    } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+      e.preventDefault();
+      prevBird();
     } else if (state.mode === 'quiz' && !state.quizAnswered && /^[1-4]$/.test(e.key)) {
       const idx = parseInt(e.key, 10) - 1;
       const btn = el.cardBody.querySelectorAll('.choice-btn')[idx];
@@ -992,8 +1308,8 @@
   // ===== Boot =====
   (async function init() {
     await loadBirds();
-    rebuildPool();
-    nextBird();
+    rebuildDeck();
+    renderCard();
   })();
 </script>
 
