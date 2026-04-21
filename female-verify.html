@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Female Photo Verification — Birds of the Route</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5eedc;
+    --paper: #fbf7ec;
+    --forest: #2d4a2b;
+    --forest-light: #4a6b48;
+    --moss: #7a8a5c;
+    --ochre: #c17f3b;
+    --ochre-light: #d9a365;
+    --rust: #a85a2b;
+    --ink: #2a241c;
+    --ink-soft: #5a4e3e;
+    --leaf: #e8ebdc;
+    --success: #5c7a3a;
+    --error: #a84b3a;
+    --shadow: 0 2px 8px rgba(42, 36, 28, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    min-height: 100vh;
+    padding-bottom: 110px;
+  }
+
+  header {
+    background: var(--paper);
+    border-bottom: 1px solid rgba(42,36,28,0.12);
+    padding: 18px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: var(--shadow);
+  }
+
+  .title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--forest);
+  }
+
+  .subtitle {
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .progress {
+    height: 4px;
+    background: var(--leaf);
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--forest);
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    background: var(--leaf);
+    color: var(--forest);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--forest); color: var(--paper); }
+  .filter-btn:hover:not(.active) { background: #d4dbc7; }
+
+  .stack {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .row {
+    background: var(--paper);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(42,36,28,0.08);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .row.approved { border-color: var(--success); box-shadow: 0 0 0 2px rgba(92,122,58,0.18), var(--shadow); }
+  .row.skipped { border-color: var(--ink-soft); opacity: 0.65; }
+  .row.custom { border-color: var(--ochre); box-shadow: 0 0 0 2px rgba(193,127,59,0.2), var(--shadow); }
+
+  .row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 18px 10px;
+    border-bottom: 1px dashed rgba(42,36,28,0.12);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .row-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--forest);
+    line-height: 1.2;
+  }
+  .row-sci {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .row-status {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .row-status.approved { color: var(--success); }
+  .row-status.skipped { color: var(--ink-soft); }
+  .row-status.custom { color: var(--ochre); }
+
+  .photos {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 14px;
+    padding: 14px 18px 16px;
+  }
+
+  .photo-male {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .photo-male-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .photo-male-label .sym { color: #2a6da8; font-size: 1rem; }
+  .photo-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--leaf);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-thumb-skel {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+  }
+  .photo-thumb-skel.hidden { display: none; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .candidates-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .candidates-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .candidates-label .sym { color: #b1457a; font-size: 1rem; }
+
+  .candidates {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+
+  .candidate {
+    cursor: pointer;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.12s;
+    position: relative;
+  }
+  .candidate:hover { border-color: var(--forest); transform: translateY(-1px); }
+  .candidate.selected {
+    border-color: var(--success);
+    box-shadow: 0 0 0 2px rgba(92,122,58,0.25);
+  }
+  .candidate-img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--leaf);
+    object-fit: cover;
+    display: block;
+  }
+  .candidate-check {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--success);
+    color: var(--paper);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .candidate.selected .candidate-check { display: flex; }
+
+  .empty-candidates {
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Fraunces', Georgia, serif;
+    padding: 14px 8px;
+    text-align: center;
+    background: var(--leaf);
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+
+  .row-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 18px 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .row-actions input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 12px;
+    border: 1px solid rgba(42,36,28,0.2);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: var(--cream);
+  }
+  .row-actions input[type="text"]:focus {
+    outline: none;
+    border-color: var(--forest);
+  }
+  .mini-btn {
+    background: transparent;
+    border: 1px solid rgba(42,36,28,0.2);
+    color: var(--ink-soft);
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mini-btn:hover { border-color: var(--forest); color: var(--forest); background: var(--leaf); }
+  .mini-btn.skip:hover { border-color: var(--rust); color: var(--rust); background: rgba(168, 91, 58, 0.06); }
+  .mini-btn.use-custom { background: var(--ochre); color: var(--paper); border-color: var(--ochre); }
+  .mini-btn.use-custom:hover { background: var(--rust); border-color: var(--rust); color: var(--paper); }
+  .mini-btn.clear { color: var(--rust); border-color: var(--rust); }
+
+  .commons-link {
+    font-size: 0.78rem;
+    color: var(--moss);
+    text-decoration: none;
+    border-bottom: 1px dotted;
+    align-self: center;
+  }
+  .commons-link:hover { color: var(--forest); }
+
+  .export-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--paper);
+    border-top: 1px solid rgba(42,36,28,0.12);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 -4px 20px rgba(42,36,28,0.08);
+    z-index: 10;
+    flex-wrap: wrap;
+  }
+  .export-stats {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .export-stats span strong { font-family: 'Fraunces', Georgia, serif; font-size: 1.05rem; font-weight: 700; }
+  .export-stats .approved-stat strong { color: var(--success); }
+  .export-stats .skipped-stat strong { color: var(--ink-soft); }
+  .export-stats .pending-stat strong { color: var(--rust); }
+
+  .btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--forest); color: var(--paper); }
+  .btn-primary:hover { background: var(--forest-light); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--forest);
+    border: 1px solid var(--forest);
+  }
+  .btn-secondary:hover { background: var(--leaf); }
+
+  /* Modal */
+  .modal {
+    position: fixed; inset: 0;
+    background: rgba(42,36,28,0.6);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px; z-index: 100;
+  }
+  .modal.open { display: flex; }
+  .modal-body {
+    background: var(--paper);
+    border-radius: 14px;
+    max-width: 760px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(42,36,28,0.12);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--forest);
+    font-size: 1.2rem;
+  }
+  .modal-close {
+    background: none; border: none;
+    font-size: 1.4rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 0 6px;
+  }
+  .modal-content { padding: 16px 20px; flex: 1; overflow: auto; }
+  .modal-content p { margin-bottom: 12px; font-size: 0.92rem; color: var(--ink-soft); }
+  .modal-content textarea {
+    width: 100%;
+    height: 320px;
+    padding: 12px;
+    border: 1px solid rgba(42,36,28,0.15);
+    border-radius: 8px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.78rem;
+    resize: vertical;
+    background: var(--cream);
+  }
+  .modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(42,36,28,0.12);
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+
+  .toast {
+    position: fixed; top: 100px; left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--forest);
+    color: var(--paper);
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 600px) {
+    .photos { grid-template-columns: 1fr; }
+    .photo-male { flex-direction: row; align-items: center; gap: 12px; }
+    .photo-male-label { writing-mode: horizontal-tb; flex: 0 0 auto; }
+    .photo-male .photo-thumb { flex: 1; max-width: 220px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">Female Photo Verification</div>
+  <div class="subtitle">For each dimorphic species, pick a female photo (or paste a custom URL, or skip).</div>
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-text" id="progressText">Loading…</div>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="pending">Pending</button>
+    <button class="filter-btn" data-filter="approved">Approved</button>
+    <button class="filter-btn" data-filter="skipped">Skipped</button>
+  </div>
+</header>
+
+<main class="stack" id="stack"></main>
+
+<div class="export-bar">
+  <div class="export-stats">
+    <span class="approved-stat">Approved: <strong id="approvedCount">0</strong></span>
+    <span class="skipped-stat">Skipped: <strong id="skippedCount">0</strong></span>
+    <span class="pending-stat">Pending: <strong id="pendingCount">0</strong></span>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button class="btn btn-secondary" id="resetBtn">Reset all</button>
+    <button class="btn btn-primary" id="exportBtn" disabled>Export updated birds.json</button>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-body">
+    <div class="modal-header">
+      <h2>Updated birds.json</h2>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-content">
+      <p>Copy this entire block and replace the contents of your <code>birds.json</code>. Approved species get a <code>femaleImage</code> field; skipped species get <code>sexIdSkip: true</code>.</p>
+      <textarea id="exportText" readonly></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modalCloseBtn">Close</button>
+      <button class="btn btn-primary" id="copyBtn">Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'femalePhotoChoices_v1';
+
+  // ===== State =====
+  let birdsData = null;
+  let dimorphic = [];
+  let choices = {};      // birdName -> { status: 'approved'|'skipped'|'custom', url?: string }
+  let candidatesByBird = {}; // birdName -> [{title, url, thumb}]
+  let currentFilter = 'all';
+  let loaded = 0, total = 0;
+
+  // Restore prior choices
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) choices = JSON.parse(raw) || {};
+  } catch (e) { choices = {}; }
+
+  function saveChoices() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(choices)); } catch (e) {}
+    updateExportState();
+  }
+
+  function updateExportState() {
+    const counts = { approved: 0, skipped: 0, custom: 0 };
+    Object.values(choices).forEach(c => {
+      if (c.status === 'approved') counts.approved++;
+      else if (c.status === 'skipped') counts.skipped++;
+      else if (c.status === 'custom') counts.custom++;
+    });
+    const decided = counts.approved + counts.skipped + counts.custom;
+    const pending = dimorphic.length - decided;
+    document.getElementById('approvedCount').textContent = counts.approved + counts.custom;
+    document.getElementById('skippedCount').textContent = counts.skipped;
+    document.getElementById('pendingCount').textContent = pending;
+    document.getElementById('exportBtn').disabled = decided === 0;
+  }
+
+  // ===== Wikipedia / Commons fetching =====
+  // Get the male image for a species, by Wikipedia article wiki title
+  async function fetchMaleImage(wikiTitle) {
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return (data.originalimage && data.originalimage.source)
+          || (data.thumbnail && data.thumbnail.source)
+          || null;
+    } catch (e) { return null; }
+  }
+
+  // Find female-candidate images via Commons category for the species' scientific name.
+  // Strategy: fetch images in Category:<Sci_name>, filter filename for "female"/"hen"/"♀".
+  async function fetchFemaleCandidates(sciName) {
+    const cat = 'Category:' + sciName.replace(/ /g, '_');
+    const apiUrl = `https://commons.wikimedia.org/w/api.php?` + new URLSearchParams({
+      action: 'query',
+      list: 'categorymembers',
+      cmtitle: cat,
+      cmtype: 'file',
+      cmlimit: '500',
+      format: 'json',
+      origin: '*'
+    });
+    try {
+      const res = await fetch(apiUrl);
+      if (!res.ok) return [];
+      const data = await res.json();
+      const members = (data.query && data.query.categorymembers) || [];
+      // Filter filename for female/hen/♀ markers (case-insensitive)
+      const female = members.filter(m => {
+        const t = m.title.toLowerCase();
+        return /\b(female|♀|hen)\b/.test(t)
+          || / f[\.,_ \-]/.test(t.replace(/^file:/i, ''))
+          || /\(f\)/.test(t);
+      });
+      // De-dup, keep first 6 candidates max
+      const titles = female.map(m => m.title).slice(0, 6);
+      if (!titles.length) return [];
+      // Get URLs for each candidate
+      const infoUrl = `https://commons.wikimedia.org/w/api.php?` + new URLSearchParams({
+        action: 'query',
+        prop: 'imageinfo',
+        iiprop: 'url',
+        iiurlwidth: '480',
+        titles: titles.join('|'),
+        format: 'json',
+        origin: '*'
+      });
+      const res2 = await fetch(infoUrl);
+      if (!res2.ok) return [];
+      const data2 = await res2.json();
+      const pages = (data2.query && data2.query.pages) || {};
+      const out = [];
+      for (const pid in pages) {
+        const page = pages[pid];
+        const info = (page.imageinfo && page.imageinfo[0]) || {};
+        if (info.thumburl && info.url) {
+          out.push({
+            title: page.title,
+            url: info.url,           // full-res, what we save
+            thumb: info.thumburl     // 480px preview
+          });
+        }
+      }
+      return out;
+    } catch (e) {
+      console.warn('Commons fetch failed for', sciName, e);
+      return [];
+    }
+  }
+
+  // ===== Rendering =====
+  function statusFor(birdName) {
+    return (choices[birdName] && choices[birdName].status) || 'pending';
+  }
+
+  function buildRow(bird) {
+    const status = statusFor(bird.name);
+    const row = document.createElement('div');
+    row.className = 'row ' + (status === 'pending' ? '' : status);
+    row.dataset.name = bird.name;
+
+    const sciHref = `https://commons.wikimedia.org/wiki/Category:${encodeURIComponent(bird.sci.replace(/ /g, '_'))}`;
+
+    row.innerHTML = `
+      <div class="row-header">
+        <div>
+          <span class="row-name">${bird.name}</span>
+          <span class="row-sci">${bird.sci}</span>
+        </div>
+        <span class="row-status ${status === 'pending' ? '' : status}" data-status>
+          ${statusLabel(status)}
+        </span>
+      </div>
+
+      <div class="photos">
+        <div class="photo-male">
+          <div class="photo-male-label"><span class="sym">♂</span> Male (current)</div>
+          <div class="photo-thumb">
+            <div class="photo-thumb-skel" data-male-skel></div>
+            <img data-male-img alt="Male ${bird.name}">
+          </div>
+        </div>
+        <div class="candidates-area">
+          <div class="candidates-label"><span class="sym">♀</span> Female candidates from Wikimedia Commons</div>
+          <div class="candidates" data-candidates>
+            <div class="empty-candidates">Searching Commons…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-actions">
+        <input type="text" data-custom-url placeholder="Or paste a Wikimedia Commons file URL"
+               value="${status === 'custom' ? (choices[bird.name].url || '') : ''}">
+        <button class="mini-btn use-custom" data-action="use-custom">Use this URL</button>
+        <button class="mini-btn skip" data-action="skip">Skip in Sex ID</button>
+        <button class="mini-btn clear" data-action="clear">Clear</button>
+        <a class="commons-link" href="${sciHref}" target="_blank" rel="noopener">Browse Commons →</a>
+      </div>
+    `;
+
+    // Wire actions
+    row.querySelector('[data-action="skip"]').addEventListener('click', () => setStatus(bird.name, 'skipped'));
+    row.querySelector('[data-action="clear"]').addEventListener('click', () => clearStatus(bird.name));
+    row.querySelector('[data-action="use-custom"]').addEventListener('click', () => {
+      const v = row.querySelector('[data-custom-url]').value.trim();
+      if (!v) { showToast('Paste a URL first'); return; }
+      choices[bird.name] = { status: 'custom', url: v };
+      saveChoices();
+      refreshRow(row, bird);
+      applyFilter();
+    });
+
+    return row;
+  }
+
+  function statusLabel(s) {
+    if (s === 'approved') return '✓ Approved';
+    if (s === 'custom') return '✓ Custom URL';
+    if (s === 'skipped') return '⊘ Skipped';
+    return '— Pending';
+  }
+
+  function setStatus(birdName, status) {
+    const row = document.querySelector(`.row[data-name="${cssEscape(birdName)}"]`);
+    if (status === 'skipped') {
+      choices[birdName] = { status: 'skipped' };
+    }
+    saveChoices();
+    if (row) refreshRow(row, dimorphic.find(b => b.name === birdName));
+    applyFilter();
+  }
+
+  function clearStatus(birdName) {
+    delete choices[birdName];
+    saveChoices();
+    const row = document.querySelector(`.row[data-name="${cssEscape(birdName)}"]`);
+    if (row) refreshRow(row, dimorphic.find(b => b.name === birdName));
+    applyFilter();
+  }
+
+  function pickCandidate(birdName, url) {
+    choices[birdName] = { status: 'approved', url };
+    saveChoices();
+    const row = document.querySelector(`.row[data-name="${cssEscape(birdName)}"]`);
+    if (row) refreshRow(row, dimorphic.find(b => b.name === birdName));
+    applyFilter();
+  }
+
+  function cssEscape(s) {
+    if (window.CSS && CSS.escape) return CSS.escape(s);
+    return s.replace(/"/g, '\\"');
+  }
+
+  function refreshRow(row, bird) {
+    const status = statusFor(bird.name);
+    row.classList.remove('approved', 'skipped', 'custom');
+    if (status !== 'pending') row.classList.add(status);
+    const statusEl = row.querySelector('[data-status]');
+    statusEl.className = 'row-status' + (status === 'pending' ? '' : ' ' + status);
+    statusEl.textContent = statusLabel(status);
+
+    // Update candidate selection visuals
+    const approvedUrl = (choices[bird.name] && choices[bird.name].status === 'approved')
+      ? choices[bird.name].url : null;
+    row.querySelectorAll('.candidate').forEach(c => {
+      c.classList.toggle('selected', c.dataset.url === approvedUrl);
+    });
+  }
+
+  function renderCandidates(row, bird, candidates) {
+    const container = row.querySelector('[data-candidates]');
+    if (!candidates.length) {
+      container.innerHTML = `<div class="empty-candidates">
+        No female-tagged photos found. Use the Commons link to find one,
+        or paste a URL below, or skip this species.
+      </div>`;
+      return;
+    }
+    const approvedUrl = (choices[bird.name] && choices[bird.name].status === 'approved')
+      ? choices[bird.name].url : null;
+    container.innerHTML = candidates.map(c => `
+      <button type="button" class="candidate ${c.url === approvedUrl ? 'selected' : ''}"
+              data-url="${escapeAttr(c.url)}" title="${escapeAttr(c.title)}">
+        <img class="candidate-img" src="${escapeAttr(c.thumb)}" alt="${escapeAttr(c.title)}" loading="lazy">
+        <div class="candidate-check">✓</div>
+      </button>
+    `).join('');
+    container.querySelectorAll('.candidate').forEach(c => {
+      c.addEventListener('click', () => pickCandidate(bird.name, c.dataset.url));
+    });
+  }
+
+  function escapeAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ===== Loading flow =====
+  async function loadBird(row, bird) {
+    // Male image
+    fetchMaleImage(bird.wiki).then(src => {
+      const img = row.querySelector('[data-male-img]');
+      const skel = row.querySelector('[data-male-skel]');
+      if (src) {
+        img.src = src;
+        img.onload = () => skel.classList.add('hidden');
+        img.onerror = () => { skel.classList.add('hidden'); img.alt = '(no photo)'; };
+      } else {
+        skel.classList.add('hidden');
+        img.alt = '(no photo)';
+      }
+    });
+    // Female candidates
+    const candidates = await fetchFemaleCandidates(bird.sci);
+    candidatesByBird[bird.name] = candidates;
+    renderCandidates(row, bird, candidates);
+
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent =
+      loaded < total ? `Loading candidates… ${loaded} / ${total}` : `All ${total} species loaded`;
+  }
+
+  // Concurrency limiter (Commons API is rate-friendly but we don't want to hammer)
+  async function withConcurrency(items, limit, worker) {
+    const queue = items.slice();
+    const runners = Array.from({ length: limit }, async () => {
+      while (queue.length) {
+        const item = queue.shift();
+        await worker(item);
+      }
+    });
+    await Promise.all(runners);
+  }
+
+  function applyFilter() {
+    document.querySelectorAll('.row').forEach(r => {
+      const status = statusFor(r.dataset.name);
+      let show = true;
+      if (currentFilter === 'pending') show = status === 'pending';
+      else if (currentFilter === 'approved') show = (status === 'approved' || status === 'custom');
+      else if (currentFilter === 'skipped') show = status === 'skipped';
+      r.style.display = show ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  // Reset
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (!Object.keys(choices).length) return;
+    if (!confirm('Clear all your decisions?')) return;
+    choices = {};
+    saveChoices();
+    document.querySelectorAll('.row').forEach(r => {
+      const bird = dimorphic.find(b => b.name === r.dataset.name);
+      refreshRow(r, bird);
+    });
+    applyFilter();
+    showToast('All decisions cleared');
+  });
+
+  // Export
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const updated = {
+      ...birdsData,
+      birds: birdsData.birds.map(b => {
+        const c = choices[b.name];
+        if (!c) return b;
+        if (c.status === 'skipped') {
+          return { ...b, sexIdSkip: true };
+        }
+        if (c.status === 'approved' || c.status === 'custom') {
+          return { ...b, femaleImage: c.url };
+        }
+        return b;
+      })
+    };
+    document.getElementById('exportText').value = JSON.stringify(updated, null, 2);
+    document.getElementById('modal').classList.add('open');
+  });
+
+  document.getElementById('modalClose').addEventListener('click', () =>
+    document.getElementById('modal').classList.remove('open'));
+  document.getElementById('modalCloseBtn').addEventListener('click', () =>
+    document.getElementById('modal').classList.remove('open'));
+  document.getElementById('modal').addEventListener('click', (e) => {
+    if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open');
+  });
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(document.getElementById('exportText').value);
+      showToast('Copied! Paste into birds.json');
+    } catch (e) {
+      document.getElementById('exportText').select();
+      showToast('Select and copy the text manually');
+    }
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ===== Boot =====
+  (async function init() {
+    try {
+      const res = await fetch('birds.json');
+      birdsData = await res.json();
+    } catch (e) {
+      document.getElementById('stack').innerHTML =
+        '<p style="text-align:center; padding:40px; color:var(--error);">Could not load birds.json. Make sure it\'s in the same folder and you\'re serving over http (not file://).</p>';
+      return;
+    }
+
+    dimorphic = birdsData.birds.filter(b => b.dimorphic);
+    total = dimorphic.length;
+    updateExportState();
+
+    const stack = document.getElementById('stack');
+    const rows = dimorphic.map(b => {
+      const row = buildRow(b);
+      stack.appendChild(row);
+      return { row, bird: b };
+    });
+
+    await withConcurrency(rows, 4, async ({ row, bird }) => {
+      await loadBird(row, bird);
+    });
+
+    document.getElementById('progressText').textContent = `All ${total} species loaded — ready to verify`;
+    setTimeout(() => {
+      document.getElementById('progressBar').parentElement.style.display = 'none';
+    }, 2500);
+  })();
+</script>
+
+</body>
+</html>
