@@ -167,7 +167,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/1/1c/20240409_mallard_hen_canoe_meadows.webm"
     },
     {
       "name": "Wood Duck",
@@ -179,7 +180,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Wood_duck_female_in_PP_%2845101%29.jpg"
     },
     {
       "name": "Northern Pintail",
@@ -190,7 +192,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Anatinae_Anas_A_acuta_female.jpg"
     },
     {
       "name": "American Wigeon",
@@ -202,7 +205,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/5/5c/American_Wigeon_Female.jpg"
     },
     {
       "name": "Gadwall",
@@ -213,7 +217,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/9/97/Female_gadwall_duck_at_Lower_Klamath_NWR%2C_California_%285709971787%29.jpg"
     },
     {
       "name": "Northern Shoveler",
@@ -225,7 +230,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/0/05/Female_Northern_Shoveler_%2826665246690%29.jpg"
     },
     {
       "name": "Blue-winged Teal",
@@ -236,7 +242,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Blue-winged_Teal_Hen_%2826234389506%29.jpg"
     },
     {
       "name": "Cinnamon Teal",
@@ -246,7 +253,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Female_Cinnamon_Teal_%288043588267%29.jpg"
     },
     {
       "name": "Green-winged Teal",
@@ -258,7 +266,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/1/11/Female_Anas_crecca_in_the_river_-_1.jpg"
     },
     {
       "name": "Redhead",
@@ -268,7 +277,8 @@
         "P"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/6/65/Aythya_americana_female.jpg"
     },
     {
       "name": "Canvasback",
@@ -278,7 +288,8 @@
         "P"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Canvasback_%28f%29_%2816546750427%29.jpg"
     },
     {
       "name": "Lesser Scaup",
@@ -289,7 +300,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Aythya_affinis_f_Toronto.jpg"
     },
     {
       "name": "Ring-necked Duck",
@@ -300,7 +312,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Aythya_collaris_-San_Luis_Obispo%2C_California%2C_USA_-female-8.jpg"
     },
     {
       "name": "Bufflehead",
@@ -313,7 +326,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/9/94/Hen_Bufflehead_LBI.jpg"
     },
     {
       "name": "Common Goldeneye",
@@ -326,7 +340,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Common_Goldeneye%2C_female.jpg"
     },
     {
       "name": "Barrow's Goldeneye",
@@ -338,7 +353,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Barrow%27s_Goldeneye_%28female%29_%286881754634%29.jpg"
     },
     {
       "name": "Harlequin Duck",
@@ -350,7 +366,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/3/39/Harlequin_duck_female_at_LeHardy_Rapids_%2853482678763%29.jpg"
     },
     {
       "name": "Surf Scoter",
@@ -360,7 +377,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Melanitta_perspicillata_female.jpg"
     },
     {
       "name": "White-winged Scoter",
@@ -370,7 +388,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/0/05/Melanitta_fusca_var_deglandi_f_Toronto.jpg"
     },
     {
       "name": "Common Merganser",
@@ -383,7 +402,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Common_Merganser_female_RWD.jpg"
     },
     {
       "name": "Red-breasted Merganser",
@@ -393,7 +413,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/6/69/Female_Merganser_%2813559458334%29.jpg"
     },
     {
       "name": "Hooded Merganser",
@@ -405,7 +426,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Female_hooded_merganser_%288340748440%29.jpg"
     },
     {
       "name": "Trumpeter Swan",
@@ -771,7 +793,8 @@
       "dimorphic": true,
       "starter": false,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Northern_%28Hen%29_Harrier.jpg"
     },
     {
       "name": "Cooper's Hawk",
@@ -794,7 +817,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/d/d2/American_Kestrel_%28f%29_%2844882760102%29.jpg"
     },
     {
       "name": "Merlin",
@@ -925,7 +949,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/6/69/Dendragapus_obscurus_female.jpg"
     },
     {
       "name": "Spruce Grouse",
@@ -935,7 +960,8 @@
         "M"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Spruce_grouse_female_or_immature_male_IV_avalon_9_23_%2814290856434%29.jpg"
     },
     {
       "name": "White-tailed Ptarmigan",
@@ -966,7 +992,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/4/46/Ring-necked_pheasant_%2849882546991%29.jpg"
     },
     {
       "name": "California Quail",
@@ -976,7 +1003,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/3/33/California_Quail_%28f%29_%2840059471280%29.jpg"
     },
     {
       "name": "Anna's Hummingbird",
@@ -986,7 +1014,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Anna%27s_Hummingbird_-_juvenile_female.jpg"
     },
     {
       "name": "Rufous Hummingbird",
@@ -998,7 +1027,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Rufous_Female_115_%2834371896871%29.jpg"
     },
     {
       "name": "Calliope Hummingbird",
@@ -1009,7 +1039,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Calliope_Hummingbird_%28female_or_immature%29_-_South_Fork_-_Cave_Creek_-_AZ_-_2015-09-16at11-22-4314_%2821935888781%29.jpg"
     },
     {
       "name": "Belted Kingfisher",
@@ -1022,7 +1053,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Belted_Kingfisher_%28f%29_%2844882754652%29.jpg"
     },
     {
       "name": "Northern Flicker",
@@ -1037,7 +1069,8 @@
       "dimorphic": true,
       "starter": true,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "sexIdSkip": true
     },
     {
       "name": "Downy Woodpecker",
@@ -1050,7 +1083,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "sexIdSkip": true
     },
     {
       "name": "Hairy Woodpecker",
@@ -1065,7 +1099,8 @@
       "dimorphic": true,
       "starter": false,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "sexIdSkip": true
     },
     {
       "name": "Pileated Woodpecker",
@@ -1079,7 +1114,8 @@
       "dimorphic": true,
       "starter": true,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "sexIdSkip": true
     },
     {
       "name": "Lewis's Woodpecker",
@@ -1104,7 +1140,8 @@
       "dimorphic": true,
       "starter": false,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "sexIdSkip": true
     },
     {
       "name": "Western Wood-Pewee",
@@ -1198,7 +1235,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Female_Tree_Swallow_%287337735864%29.jpg"
     },
     {
       "name": "Violet-green Swallow",
@@ -1210,7 +1248,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/0/05/Tachycineta_thalassina_-San_Luis_Obispo%2C_California%2C_USA_-female-8_%282%29.jpg"
     },
     {
       "name": "Barn Swallow",
@@ -1258,7 +1297,8 @@
         "M"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Horned_Lark%2C_female_%2824802473921%29.jpg"
     },
     {
       "name": "Bushtit",
@@ -1306,7 +1346,17 @@
       "dimorphic": false,
       "starter": false
     },
-    { "name": "Northern House Wren", "sci": "Troglodytes aedon", "wiki": "Northern house wren", "regions": ["P","I"], "dimorphic": false, "starter": false },
+    {
+      "name": "Northern House Wren",
+      "sci": "Troglodytes aedon",
+      "wiki": "Northern house wren",
+      "regions": [
+        "P",
+        "I"
+      ],
+      "dimorphic": false,
+      "starter": false
+    },
     {
       "name": "Pacific Wren",
       "sci": "Troglodytes pacificus",
@@ -1361,7 +1411,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Regulus_calendula_f_Sam_Smith_Park.jpg"
     },
     {
       "name": "Golden-crowned Kinglet",
@@ -1373,7 +1424,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "sexIdSkip": true
     },
     {
       "name": "Mountain Bluebird",
@@ -1384,7 +1436,8 @@
         "M"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/3/31/Mountain_Bluebird_female.png"
     },
     {
       "name": "Western Bluebird",
@@ -1394,7 +1447,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Female_Bluebird_%2851129546299%29.jpg"
     },
     {
       "name": "Townsend's Solitaire",
@@ -1439,7 +1493,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/1/11/Ixoreus_naevius_-Washington%2C_USA_-female-8.jpg"
     },
     {
       "name": "Gray Catbird",
@@ -1511,7 +1566,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/b/ba/House_Sparrow_female_AMSM6777_HSPA.jpg"
     },
     {
       "name": "House Finch",
@@ -1523,7 +1579,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Female_house_finch_carpodacus_mexicanus.jpg"
     },
     {
       "name": "Cassin's Finch",
@@ -1534,7 +1591,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Cassin%27s_Finch_%28female%29.jpg"
     },
     {
       "name": "Purple Finch",
@@ -1545,7 +1603,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/5/50/Carpodacus_purpureus_female.jpg"
     },
     {
       "name": "American Goldfinch",
@@ -1556,7 +1615,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/3/3e/American_goldfinch_winter_f.jpg"
     },
     {
       "name": "Pine Siskin",
@@ -1580,7 +1640,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Cruza-bico_comum%2C_f%C3%AAmea%2C_Red_Crossbill%2C_female_%2851692602998%29.jpg"
     },
     {
       "name": "Pine Grosbeak",
@@ -1590,7 +1651,8 @@
         "M"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Pinicola_enucleator_Pine_grosbeak_f_Algonquin_Park_1.jpg"
     },
     {
       "name": "Evening Grosbeak",
@@ -1601,7 +1663,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Evening_Grosbeak_%28female%29.jpg"
     },
     {
       "name": "Gray-crowned Rosy-Finch",
@@ -1706,7 +1769,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "sexIdSkip": true
     },
     {
       "name": "Western Meadowlark",
@@ -1730,7 +1794,8 @@
       "dimorphic": true,
       "starter": true,
       "crop": "contain",
-      "position": "center center"
+      "position": "center center",
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/2/24/Female_Red-winged_Blackbird_Fletcher_Wildlife_Garden.jpg"
     },
     {
       "name": "Yellow-headed Blackbird",
@@ -1742,7 +1807,8 @@
       "dimorphic": true,
       "starter": true,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Yellow-headed_Blackbird_%28female%29_Estero_Llano_SP_Mission_TX_2018-03-14_07-08-27_%2825941719157%29.jpg"
     },
     {
       "name": "Brewer's Blackbird",
@@ -1753,7 +1819,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Brewer%27s_Blackbird_-_female.jpg"
     },
     {
       "name": "Brown-headed Cowbird",
@@ -1764,7 +1831,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/0/08/20240401_female_brown_headed_cowbird_casa_PD206912.jpg"
     },
     {
       "name": "Bullock's Oriole",
@@ -1774,7 +1842,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Bullock%27s_Oriole_%28female%29_Paton%27s_Patagonia_AZ_2017-04-25_06-27-18-2_%2833481904394%29.jpg"
     },
     {
       "name": "Western Tanager",
@@ -1788,7 +1857,8 @@
       "dimorphic": true,
       "starter": true,
       "crop": "cover",
-      "position": "center top"
+      "position": "center top",
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Western_Tanager_%28female%29_-_Paradise_Loop_-_AZ_-_2015-07-27at12-01-192_%2820124046374%29.jpg"
     },
     {
       "name": "Black-headed Grosbeak",
@@ -1799,7 +1869,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/6/69/Black-headed_Grosbeak_Female%2C_Santa_Fe.jpg"
     },
     {
       "name": "Lazuli Bunting",
@@ -1809,7 +1880,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Lazuli_Bunting_%28female_or_immature%29_-_BANWR_-_Sasabe_-_AZ_-_2015-10-06at10-13-583_%2822241611992%29.jpg"
     },
     {
       "name": "Yellow Warbler",
@@ -1822,7 +1894,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/6/66/Female_Yellow_Warbler_%284979242911%29.jpg"
     },
     {
       "name": "Yellow-rumped Warbler",
@@ -1833,7 +1906,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": true
+      "starter": true,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Setophaga_coronata_female%2C_Breckinridge_Park%2C_Dallas%2C_TX.jpg"
     },
     {
       "name": "Townsend's Warbler",
@@ -1845,7 +1919,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Townsend%27s_Warbler_9472m.jpg"
     },
     {
       "name": "MacGillivray's Warbler",
@@ -1856,7 +1931,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/5/53/MacGillivray%27s_Warbler_%28female%29_-_D_%26_Y_-_Cave_Creek-_AZ_-_2015-08-30at09-06-122_%2821450739689%29.jpg"
     },
     {
       "name": "Wilson's Warbler",
@@ -1868,7 +1944,8 @@
         "C"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/4/49/Female_Wilson%27s_Warbler_%289330849682%29.jpg"
     },
     {
       "name": "Common Yellowthroat",
@@ -1879,7 +1956,8 @@
         "I"
       ],
       "dimorphic": true,
-      "starter": false
+      "starter": false,
+      "femaleImage": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Common_Yellowthroat_%28female%29_%285005073287%29.jpg"
     },
     {
       "name": "Orange-crowned Warbler",
